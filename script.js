@@ -93,3 +93,46 @@ openBookingButtons.forEach(button => {
         document.body.style.overflow = "hidden";
     });
 });
+// Enquiry Popup
+const enquiryBtn = document.getElementById('enquireBtn');
+const enquiryOverlay = document.getElementById('enquiryOverlay');
+const enquiryClose = document.getElementById('enquiryClose');
+const enquiryForm = document.getElementById('enquiryForm');
+
+enquiryBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    enquiryOverlay.classList.add('show');
+});
+
+enquiryClose.addEventListener('click', () => {
+    enquiryOverlay.classList.remove('show');
+});
+
+enquiryOverlay.addEventListener('click', (e) => {
+    if (e.target === enquiryOverlay) {
+        enquiryOverlay.classList.remove('show');
+    }
+});
+
+enquiryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('enquiryName').value.trim();
+    const phone = document.getElementById('enquiryPhone').value.trim();
+    const location = document.getElementById('enquiryLocation').value.trim();
+
+    const message =
+        `Hello Preeti Studio,%0A%0A` +
+        `I want to make an enquiry.%0A%0A` +
+        `Name: ${encodeURIComponent(name)}%0A` +
+        `Mobile: ${encodeURIComponent(phone)}%0A` +
+        `Location: ${encodeURIComponent(location)}`;
+
+    window.open(
+        `https://wa.me/916306911551?text=${message}`,
+        '_blank'
+    );
+
+    enquiryForm.reset();
+    enquiryOverlay.classList.remove('show');
+});
