@@ -84,3 +84,12 @@ document.getElementById("bookingForm").addEventListener("submit", function(e) {
 
     window.open(whatsappURL, "_blank");
 });
+const openBookingButtons = document.querySelectorAll(".openBooking");
+
+openBookingButtons.forEach(button => {
+    button.addEventListener("click", function(e) {
+        e.preventDefault();
+        bookingOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+    });
+});
