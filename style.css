@@ -590,9 +590,9 @@ footer>div>p {
         grid-template-columns: 1fr
     }
 
-    .gallery-item {
+    /* .gallery-item {
         height: 320px
-    }
+    } */
 
     .section-head {
         display: block
@@ -981,74 +981,78 @@ footer>div>p {
     }
 }
 
-/* FINAL MOBILE OVERFLOW FIX */
+/* ===== MOBILE HORIZONTAL OVERFLOW FIX 01 ===== */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+}
+
 @media (max-width: 600px) {
 
-    * {
-        box-sizing: border-box;
-    }
-
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden !important;
-    }
-
+    /* Header */
     .nav {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        position: relative;
         padding-left: 5%;
         padding-right: 5%;
     }
 
     .brand {
-        max-width: calc(100% - 55px);
         min-width: 0;
+        max-width: calc(100% - 50px);
         overflow: hidden;
     }
 
     .menu {
-        flex-shrink: 0;
-        width: 44px;
-        min-width: 44px;
-        margin-left: auto;
-        position: relative;
-        z-index: 10001;
+        flex: 0 0 40px;
+        width: 40px;
+        padding: 0;
+        margin: 0;
+        display: block;
     }
 
-    .portfolio {
+    /* Prevent long text from creating horizontal scroll */
+    .hero-meta span,
+    .facts span {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* All main sections */
+    .hero,
+    .section,
+    .portfolio,
+    .packages,
+    .cta,
+    footer {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
 
+    /* Portfolio */
     .gallery {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        grid-template-columns: 1fr;
-        box-sizing: border-box;
     }
 
     .gallery-item {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        height: auto;
-        aspect-ratio: 3 / 2;
         box-sizing: border-box;
     }
 
     .gallery-item img {
         width: 100%;
         max-width: 100%;
-        height: 100%;
         display: block;
-        object-fit: cover;
     }
 }
+/* ===== MOBILE HORIZONTAL OVERFLOW FIX 01 end ===== */
