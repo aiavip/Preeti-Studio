@@ -586,12 +586,7 @@ footer>div>p {
         box-sizing: border-box;
         overflow: visible;
     }
-    /* new edditing 01 */
-     .nav.open nav {
-        top: 68px;
-    }
-    /* yaha tak 01 */
-
+    
     .brand {
         font-size: 25px;
         line-height: 1;
