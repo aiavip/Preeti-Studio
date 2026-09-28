@@ -1003,3 +1003,14 @@ footer>div>p {
         cursor: pointer;
     }
 }
+@media (max-width: 600px) {
+    .nav {
+        padding: 0 12px;
+    }
+
+    .menu {
+        position: relative;
+        right: 0;
+        flex-shrink: 0;
+    }
+}
