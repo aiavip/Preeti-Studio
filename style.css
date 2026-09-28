@@ -590,9 +590,9 @@ footer>div>p {
         grid-template-columns: 1fr
     }
 
-    .gallery-item {
+    /* .gallery-item {
         height: 275px
-    }
+    } */
 
     .section-head {
         display: block
