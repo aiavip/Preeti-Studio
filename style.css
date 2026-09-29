@@ -3,14 +3,20 @@
 }
 
 html {
-    scroll-behavior: smooth
+    scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: clip;
 }
 
 body {
     margin: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     font-family: "DM Sans", sans-serif;
     color: #171717;
-    background: #fff
+    background: #fff;
+    overflow-x: clip;
 }
 
 a {
@@ -115,7 +121,8 @@ a {
 .hero-content {
     position: relative;
     color: #fff;
-    max-width: 670px
+    max-width: 670px;
+    min-width: 0
 }
 
 .eyebrow {
@@ -158,7 +165,13 @@ a {
     flex-wrap: wrap;
     font-size: 13px;
     color: #eee;
-    margin: 25px 0
+    margin: 25px 0;
+    min-width: 0
+}
+
+.hero-meta span {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .buttons {
@@ -201,6 +214,7 @@ a {
 
 .services {
     display: grid;
+    min-width: 0;
     grid-template-columns: 230px 1fr;
     gap: 40px;
     align-items: start
@@ -228,6 +242,7 @@ a {
 
 .service-grid {
     display: grid;
+    min-width: 0;
     grid-template-columns: repeat(3, 1fr);
     gap: 18px
 }
@@ -294,6 +309,7 @@ a {
 .about {
     padding: 75px 6%;
     display: grid;
+    min-width: 0;
     grid-template-columns: 1.1fr 1.35fr .7fr;
     gap: 42px;
     align-items: center
@@ -315,7 +331,13 @@ a {
     gap: 25px;
     margin-top: 25px;
     color: #eee;
-    font-size: 12px
+    font-size: 12px;
+    min-width: 0
+}
+
+.facts span {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .highlights {
@@ -371,6 +393,7 @@ a {
 
 .gallery {
     display: grid;
+    min-width: 0;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
@@ -406,6 +429,7 @@ a {
 
 .package-grid {
     display: grid;
+    min-width: 0;
     grid-template-columns: repeat(3, 1fr);
     gap: 18px;
     max-width: 1000px;
@@ -553,12 +577,44 @@ footer>div>p {
 
 @media(max-width:600px) {
     .nav {
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
         padding: 0 5%;
-        height: 68px
+        height: 68px;
+        box-sizing: border-box;
+        overflow: visible;
+    }
+    
+    .brand {
+        font-size: 25px;
+        line-height: 1;
+        min-width: 0;
+        max-width: calc(100% - 55px);
+        margin: 0;
+        padding: 3px 4px 3px 0;
+        overflow: visible;
+        flex: 1 1 auto;
     }
 
-    .brand {
-        font-size: 25px
+    .brand > span:last-child {
+        min-width: 0;
+        overflow: visible;
+    }
+
+    .brand small {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .menu {
+        flex: 0 0 40px;
+        width: 40px;
+        min-width: 40px;
+        padding: 0;
+        margin: 0;
+        display: block;
     }
 
     .hero {
@@ -590,9 +646,20 @@ footer>div>p {
         grid-template-columns: 1fr
     }
 
-    /* .gallery-item {
-        height: 320px
-    } */
+    .gallery-item {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        aspect-ratio: 3 / 2;
+        height: auto;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        display: block;
+    }
 
     .section-head {
         display: block
@@ -981,49 +1048,13 @@ footer>div>p {
     }
 }
 
-/* ===== MOBILE HORIZONTAL OVERFLOW FIX 01 ===== */
 
-html,
-body {
-    max-width: 100%;
-    overflow-x: hidden !important;
-}
 
+/* =========================================================
+   MOBILE RESPONSIVE / HORIZONTAL OVERFLOW FIX
+   Keeps the desktop layout unchanged.
+========================================================= */
 @media (max-width: 600px) {
-
-    /* Header */
-    .nav {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-
-    .brand {
-        min-width: 0;
-        max-width: calc(100% - 50px);
-        overflow: hidden;
-    }
-
-    .menu {
-        flex: 0 0 40px;
-        width: 40px;
-        padding: 0;
-        margin: 0;
-        display: block;
-    }
-
-    /* Prevent long text from creating horizontal scroll */
-    .hero-meta span,
-    .facts span {
-        min-width: 0;
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    /* All main sections */
     .hero,
     .section,
     .portfolio,
@@ -1032,27 +1063,49 @@ body {
     footer {
         width: 100%;
         max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Portfolio */
-    .gallery {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .gallery-item {
-        width: 100%;
-        max-width: 100%;
         min-width: 0;
         box-sizing: border-box;
     }
 
-    .gallery-item img {
-        width: 100%;
+    .hero-content,
+    .section-intro,
+    .about-copy,
+    .highlights,
+    .service-card,
+    .package-grid article,
+    footer > div {
+        min-width: 0;
         max-width: 100%;
-        display: block;
+    }
+
+    .hero h1,
+    .hero h2,
+    .hero-copy,
+    .section h2,
+    .about h2,
+    .packages h2,
+    .cta h2 {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .section-head {
+        min-width: 0;
+    }
+
+    .filters {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .filter {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    footer > div > a,
+    footer > div > p,
+    .copyright {
+        overflow-wrap: anywhere;
     }
 }
-/* ===== MOBILE HORIZONTAL OVERFLOW FIX 01 end ===== */
