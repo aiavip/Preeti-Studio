@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Preeti Studio | Admin Panel</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <main class="admin-page">
+
+    <section class="login-card" id="loginCard">
+
+      <div class="admin-logo">
+        PREETI STUDIO
+      </div>
+
+      <p class="admin-label">ADMIN PANEL</p>
+
+      <h1>Welcome Back</h1>
+
+      <p class="login-text">
+        Enter your admin password to continue.
+      </p>
+
+      <form id="loginForm">
+
+        <div class="input-group">
+          <label for="adminPassword">Admin Password</label>
+
+          <input
+            type="password"
+            id="adminPassword"
+            placeholder="Enter password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button type="submit" class="login-btn">
+          Login
+        </button>
+
+        <p id="loginError" class="error-message"></p>
+
+      </form>
+
+    </section>
+
+
+    <section class="dashboard" id="dashboard" hidden>
+
+      <header class="dashboard-header">
+
+        <div>
+          <p class="admin-label">PREETI STUDIO</p>
+          <h1>Admin Dashboard</h1>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">
+          Logout
+        </button>
+
+      </header>
+
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <span>Total Bookings</span>
+          <strong id="totalBookings">0</strong>
+        </div>
+
+      </div>
+
+
+      <section class="bookings-section">
+
+        <div class="section-heading">
+          <h2>Bookings</h2>
+          <button id="refreshBtn" class="refresh-btn">
+            Refresh
+          </button>
+        </div>
+
+        <div id="bookingsContainer" class="bookings-container">
+          <p class="empty-message">No bookings found.</p>
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+  <script src="admin.js"></script>
+
+</body>
+</html>
