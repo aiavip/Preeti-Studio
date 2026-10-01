@@ -30,12 +30,22 @@ const bookingsContainer =
 const totalBookings =
   document.getElementById("totalBookings");
 
+const bookingSearch =
+  document.getElementById("bookingSearch");
+
 
 // =========================
 // ADMIN PASSWORD
 // =========================
 
 let currentPassword = "";
+
+
+// =========================
+// ALL BOOKINGS
+// =========================
+
+let allBookings = [];
 
 
 // =========================
@@ -81,14 +91,17 @@ loginForm.addEventListener("submit", async (event) => {
     // Password is kept only in memory
     currentPassword = password;
 
+    // Store all bookings
+    allBookings = data.bookings || [];
+
     // Show dashboard
     loginCard.hidden = true;
     dashboard.hidden = false;
 
     loginError.textContent = "";
 
-    // Display bookings received during login
-    displayBookings(data.bookings);
+    // Display bookings
+    displayBookings(allBookings);
 
   } catch (error) {
 
@@ -137,7 +150,11 @@ async function loadBookings() {
       return;
     }
 
-    displayBookings(data.bookings);
+    // Update all bookings
+    allBookings = data.bookings || [];
+
+    // Display all bookings
+    displayBookings(allBookings);
 
   } catch (error) {
 
@@ -157,8 +174,6 @@ async function loadBookings() {
 // =========================
 
 function displayBookings(bookings) {
-
-  totalBookings.textContent = bookings.length;
 
   if (!bookings || bookings.length === 0) {
 
@@ -241,6 +256,51 @@ function displayBookings(bookings) {
 
 
 // =========================
+// SEARCH BOOKINGS
+// =========================
+
+bookingSearch.addEventListener("input", () => {
+
+  const searchText =
+    bookingSearch.value.trim().toLowerCase();
+
+
+  if (!searchText) {
+
+    displayBookings(allBookings);
+
+    return;
+  }
+
+
+  const filteredBookings =
+    allBookings.filter((booking) => {
+
+      const name =
+        String(booking.name || "").toLowerCase();
+
+      const phone =
+        String(booking.phone || "").toLowerCase();
+
+      const location =
+        String(booking.location || "").toLowerCase();
+
+
+      return (
+        name.includes(searchText) ||
+        phone.includes(searchText) ||
+        location.includes(searchText)
+      );
+
+    });
+
+
+  displayBookings(filteredBookings);
+
+});
+
+
+// =========================
 // REFRESH BUTTON
 // =========================
 
@@ -259,7 +319,11 @@ logoutBtn.addEventListener("click", () => {
 
   currentPassword = "";
 
+  allBookings = [];
+
   adminPassword.value = "";
+
+  bookingSearch.value = "";
 
   dashboard.hidden = true;
   loginCard.hidden = false;
