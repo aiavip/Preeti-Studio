@@ -93,6 +93,7 @@ loginForm.addEventListener("submit", async (event) => {
 
     // Store all bookings
     allBookings = data.bookings || [];
+    totalBookings.textContent = allBookings.length;
 
     // Show dashboard
     loginCard.hidden = true;
@@ -152,6 +153,7 @@ async function loadBookings() {
 
     // Update all bookings
     allBookings = data.bookings || [];
+    totalBookings.textContent = allBookings.length;
 
     // Display all bookings
     displayBookings(allBookings);
