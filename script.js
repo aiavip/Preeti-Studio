@@ -1,17 +1,26 @@
 const nav=document.querySelector('.nav');
 document.querySelector('.menu').addEventListener('click',()=>nav.classList.toggle('open'));
 document.querySelectorAll('.nav nav a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
 const filters=document.querySelectorAll('.filter');
 const items=document.querySelectorAll('.gallery-item');
+
 filters.forEach(btn=>{
   btn.addEventListener('click',()=>{
     filters.forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
+
     const f=btn.dataset.filter;
-    items.forEach(item=>item.style.display=(f==='all'||item.classList.contains(f))?'block':'none');
+
+    items.forEach(item=>{
+      item.style.display=(f==='all'||item.classList.contains(f))?'block':'none';
+    });
   });
 });
+
 document.getElementById('year').textContent=new Date().getFullYear();
+
+
 /* =========================
    BOOKING FORM
 ========================= */
@@ -30,7 +39,6 @@ openBookingButtons.forEach(button => {
 
         bookingOverlay.classList.add("active");
 
-        // Page scroll lock
         document.body.style.overflow = "hidden";
 
     });
@@ -43,7 +51,6 @@ closeBooking.addEventListener("click", function() {
 
     bookingOverlay.classList.remove("active");
 
-    // Page scroll unlock
     document.body.style.overflow = "";
 });
 
@@ -59,7 +66,7 @@ bookingOverlay.addEventListener("click", function(e) {
     }
 
 });
-// Booking Form Submit → Backend
+
 
 // Booking Form Submit → Backend
 
@@ -84,6 +91,9 @@ document.getElementById("bookingForm").addEventListener("submit", async function
     const location = document.getElementById("bookingLocation").value.trim();
     const service = document.getElementById("bookingService").value;
     const message = document.getElementById("bookingMessage").value.trim();
+
+    // Unique ID for this booking request
+    const requestId = crypto.randomUUID();
 
     // Save original button text
     const originalButtonText = submitButton.textContent;
@@ -110,27 +120,28 @@ document.getElementById("bookingForm").addEventListener("submit", async function
                     date: date,
                     location: location,
                     service: service,
-                    message: message
+                    message: message,
+                    requestId: requestId
                 })
             }
         );
 
         const data = await response.json();
 
+        console.log("Booking Response:", response.status, data);
+
         if (data.success) {
 
-    alert("Booking request successfully received!");
+            alert("Booking request successfully received!");
 
-    form.reset();
+            form.reset();
 
-    submitButton.disabled = false;
-    submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
 
-    bookingOverlay.classList.remove("active");
+            bookingOverlay.classList.remove("active");
 
-    document.body.style.overflow = "";
-
-
+            document.body.style.overflow = "";
 
         } else {
 
@@ -153,28 +164,41 @@ document.getElementById("bookingForm").addEventListener("submit", async function
     }
 
 });
+
+
 // Enquiry Popup
+
 const enquiryBtn = document.getElementById('enquireBtn');
 const enquiryOverlay = document.getElementById('enquiryOverlay');
 const enquiryClose = document.getElementById('enquiryClose');
 const enquiryForm = document.getElementById('enquiryForm');
 
 enquiryBtn.addEventListener('click', (e) => {
+
     e.preventDefault();
+
     enquiryOverlay.classList.add('show');
+
 });
 
 enquiryClose.addEventListener('click', () => {
+
     enquiryOverlay.classList.remove('show');
+
 });
 
 enquiryOverlay.addEventListener('click', (e) => {
+
     if (e.target === enquiryOverlay) {
+
         enquiryOverlay.classList.remove('show');
+
     }
+
 });
 
 enquiryForm.addEventListener('submit', (e) => {
+
     e.preventDefault();
 
     const name = document.getElementById('enquiryName').value.trim();
@@ -194,5 +218,7 @@ enquiryForm.addEventListener('submit', (e) => {
     );
 
     enquiryForm.reset();
+
     enquiryOverlay.classList.remove('show');
+
 });
