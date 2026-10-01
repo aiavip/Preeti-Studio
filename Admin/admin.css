@@ -255,6 +255,54 @@ input {
   border-color: var(--gold);
 }
 
+.booking-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.booking-date-filter {
+  flex: 1;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #0d0d0d;
+  color: var(--white);
+  outline: none;
+}
+
+.booking-date-filter:focus {
+  border-color: var(--gold);
+}
+
+.clear-filters-btn {
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.clear-filters-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+@media (max-width: 700px) {
+
+  .booking-filters {
+    flex-direction: column;
+  }
+
+  .clear-filters-btn {
+    width: 100%;
+  }
+
+}
+
 .bookings-container {
   display: grid;
   gap: 15px;

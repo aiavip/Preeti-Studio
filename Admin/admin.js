@@ -33,6 +33,12 @@ const totalBookings =
 const bookingSearch =
   document.getElementById("bookingSearch");
 
+const bookingDateFilter =
+  document.getElementById("bookingDateFilter");
+
+const clearFiltersBtn =
+  document.getElementById("clearFiltersBtn");  
+
 
 // =========================
 // ADMIN PASSWORD
@@ -258,21 +264,16 @@ function displayBookings(bookings) {
 
 
 // =========================
-// SEARCH BOOKINGS
+// SEARCH + DATE FILTER
 // =========================
 
-bookingSearch.addEventListener("input", () => {
+function applyFilters() {
 
   const searchText =
     bookingSearch.value.trim().toLowerCase();
 
-
-  if (!searchText) {
-
-    displayBookings(allBookings);
-
-    return;
-  }
+  const selectedDate =
+    bookingDateFilter.value;
 
 
   const filteredBookings =
@@ -287,20 +288,57 @@ bookingSearch.addEventListener("input", () => {
       const location =
         String(booking.location || "").toLowerCase();
 
+      const bookingDate =
+        String(booking.date || "");
 
-      return (
+
+      const matchesSearch =
+        !searchText ||
         name.includes(searchText) ||
         phone.includes(searchText) ||
-        location.includes(searchText)
-      );
+        location.includes(searchText);
+
+
+      const matchesDate =
+        !selectedDate ||
+        bookingDate === selectedDate;
+
+
+      return matchesSearch && matchesDate;
 
     });
 
 
   displayBookings(filteredBookings);
 
+}
+
+
+bookingSearch.addEventListener("input", () => {
+
+  applyFilters();
+
 });
 
+
+bookingDateFilter.addEventListener("change", () => {
+
+  applyFilters();
+
+});
+
+ // =========================
+// CLEAR FILTERS
+// =========================
+
+clearFiltersBtn.addEventListener("click", () => {
+
+  bookingSearch.value = "";
+  bookingDateFilter.value = "";
+
+  displayBookings(allBookings);
+
+});
 
 // =========================
 // REFRESH BUTTON
