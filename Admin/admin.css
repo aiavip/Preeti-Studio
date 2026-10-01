@@ -272,6 +272,11 @@ input {
   outline: none;
 }
 
+.booking-date-filter::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
 .booking-date-filter:focus {
   border-color: var(--gold);
 }
