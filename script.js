@@ -61,8 +61,21 @@ bookingOverlay.addEventListener("click", function(e) {
 });
 // Booking Form Submit → Backend
 
+// Booking Form Submit → Backend
+
 document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+
     e.preventDefault();
+
+    const form = this;
+
+    // Submit button
+    const submitButton = document.getElementById("bookingSubmit");
+
+    // Prevent multiple clicks
+    if (submitButton.disabled) {
+        return;
+    }
 
     const name = document.getElementById("bookingName").value.trim();
     const phone = document.getElementById("bookingPhone").value.trim();
@@ -72,42 +85,61 @@ document.getElementById("bookingForm").addEventListener("submit", async function
     const service = document.getElementById("bookingService").value;
     const message = document.getElementById("bookingMessage").value.trim();
 
+    // Save original button text
+    const originalButtonText = submitButton.textContent;
+
+    // Immediately disable button
+    submitButton.disabled = true;
+    submitButton.textContent = "Sending Request...";
+
     try {
 
-        const response = await fetch("https://preeti-studio-backend.onrender.com/api/bookings", {
-            method: "POST",
+        const response = await fetch(
+            "https://preeti-studio-backend.onrender.com/api/bookings",
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify({
-                name: name,
-                phone: phone,
-                eventType: eventType,
-                date: date,
-                location: location,
-                service: service,
-                message: message
-            })
-        });
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone,
+                    eventType: eventType,
+                    date: date,
+                    location: location,
+                    service: service,
+                    message: message
+                })
+            }
+        );
 
         const data = await response.json();
 
         if (data.success) {
 
-            alert("Booking request successfully received!");
+    alert("Booking request successfully received!");
 
-            document.getElementById("bookingForm").reset();
+    form.reset();
 
-            bookingOverlay.classList.remove("active");
-            document.body.style.overflow = "";
+    submitButton.disabled = false;
+    submitButton.textContent = originalButtonText;
+
+    bookingOverlay.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+
 
         } else {
 
             alert("Booking submit nahi ho payi.");
 
-        }  
+            // Allow retry
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        }
 
     } catch (error) {
 
@@ -115,7 +147,11 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
         alert("Server se connection nahi ho pa raha hai.");
 
+        // Allow retry
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
     }
+
 });
 // Enquiry Popup
 const enquiryBtn = document.getElementById('enquireBtn');
