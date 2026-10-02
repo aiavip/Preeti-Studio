@@ -323,6 +323,15 @@ bookingSearch.addEventListener("input", () => {
 
 bookingDateFilter.addEventListener("change", () => {
 
+  const placeholder =
+    document.querySelector(".date-filter-placeholder");
+
+  if (bookingDateFilter.value) {
+    placeholder.style.display = "none";
+  } else {
+    placeholder.style.display = "block";
+  }
+
   applyFilters();
 
 });
@@ -336,10 +345,14 @@ clearFiltersBtn.addEventListener("click", () => {
   bookingSearch.value = "";
   bookingDateFilter.value = "";
 
+  const placeholder =
+    document.querySelector(".date-filter-placeholder");
+
+  placeholder.style.display = "block";
+
   displayBookings(allBookings);
 
 });
-
 // =========================
 // REFRESH BUTTON
 // =========================
