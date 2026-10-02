@@ -276,7 +276,7 @@ input {
   color: #777;
   font-size: 14px;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .booking-date-filter {
