@@ -266,6 +266,17 @@ input {
   flex: 1;
   height: 46px;
 }
+.date-filter-wrapper::after {
+  content: "▾";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-size: 18px;
+  pointer-events: none;
+  z-index: 3;
+}
 
 .date-filter-placeholder {
   position: absolute;
