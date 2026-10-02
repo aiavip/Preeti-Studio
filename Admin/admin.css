@@ -266,17 +266,7 @@ input {
   flex: 1;
   height: 46px;
 }
-.date-filter-wrapper::after {
-  content: "▾";
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--gold);
-  font-size: 18px;
-  pointer-events: none;
-  z-index: 3;
-}
+
 
 .date-filter-placeholder {
   position: absolute;
@@ -290,16 +280,14 @@ input {
 }
 
 .booking-date-filter {
-  width: 100%;
+  flex: 1;
   height: 46px;
   padding: 0 15px;
   border: 1px solid var(--border);
   border-radius: 9px;
   background: #0d0d0d;
-  color: transparent;
+  color: var(--white);
   outline: none;
-  position: relative;
-  z-index: 2;
 }
 
 .booking-date-filter::-webkit-calendar-picker-indicator {
