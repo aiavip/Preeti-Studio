@@ -35,9 +35,13 @@ const bookingSearch =
 
 const bookingDateFilter =
   document.getElementById("bookingDateFilter");
+  const bookingDateDisplay =
+  document.getElementById("bookingDateDisplay");
 
 const clearFiltersBtn =
   document.getElementById("clearFiltersBtn");  
+// const dateFilterText =
+//   document.getElementById("dateFilterText");
 
 
 // =========================
@@ -323,13 +327,18 @@ bookingSearch.addEventListener("input", () => {
 
 bookingDateFilter.addEventListener("change", () => {
 
-  const placeholder =
-    document.querySelector(".date-filter-placeholder");
-
   if (bookingDateFilter.value) {
-    placeholder.style.display = "none";
+
+    const parts =
+      bookingDateFilter.value.split("-");
+
+    bookingDateDisplay.value =
+      `${parts[2]}/${parts[1]}/${parts[0]}`;
+
   } else {
-    placeholder.style.display = "block";
+
+    bookingDateDisplay.value = "";
+
   }
 
   applyFilters();
@@ -344,11 +353,7 @@ clearFiltersBtn.addEventListener("click", () => {
 
   bookingSearch.value = "";
   bookingDateFilter.value = "";
-
-  const placeholder =
-    document.querySelector(".date-filter-placeholder");
-
-  placeholder.style.display = "block";
+  bookingDateDisplay.value = "";
 
   displayBookings(allBookings);
 
@@ -406,3 +411,15 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 
 }
+bookingDateDisplay.addEventListener("click", () => {
+  bookingDateFilter.showPicker();
+});
+bookingDateDisplay.addEventListener("click", () => {
+
+  bookingDateFilter.focus();
+
+  if (typeof bookingDateFilter.showPicker === "function") {
+    bookingDateFilter.showPicker();
+  }
+
+});

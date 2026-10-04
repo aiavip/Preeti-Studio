@@ -96,11 +96,32 @@
 
         <div class="booking-filters">
 
-          <div class="date-filter-wrapper">
-            <span class="date-filter-placeholder">Select Date</span>
+         <div class="date-filter-wrapper">
 
-            <input type="date" id="bookingDateFilter" class="booking-date-filter">
-          </div>
+  <input
+    type="text"
+    id="bookingDateDisplay"
+    class="booking-date-display"
+    placeholder="DD/MM/YYYY"
+    readonly
+  >
+
+  <span class="calendar-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+      <line x1="8" y1="3" x2="8" y2="7"></line>
+      <line x1="16" y1="3" x2="16" y2="7"></line>
+    </svg>
+  </span>
+
+  <input
+    type="date"
+    id="bookingDateFilter"
+    class="booking-date-filter"
+  >
+
+</div>
 
           <button type="button" id="clearFiltersBtn" class="clear-filters-btn">
             Clear
@@ -118,7 +139,7 @@
 
   </main>
 
-  <script src="admin.js?v=3"></script>
+  <script src="admin.js?v=5"></script>
 
 </body>
 

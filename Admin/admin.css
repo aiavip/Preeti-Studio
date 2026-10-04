@@ -265,47 +265,72 @@ input {
   position: relative;
   flex: 1;
   height: 46px;
-}
-
-
-.date-filter-placeholder {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #777;
-  font-size: 14px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.booking-date-filter {
-  flex: 1;
-  height: 46px;
-  padding: 0 15px;
   border: 1px solid var(--border);
   border-radius: 9px;
   background: #0d0d0d;
   color: var(--white);
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  overflow: hidden;
+}
+
+.date-filter-wrapper:focus-within {
+  border-color: var(--gold);
+}
+
+.date-filter-placeholder {
+  color: #aaa;
+  font-size: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.booking-date-display {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border: none;
   outline: none;
-}
-
-.booking-date-filter::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  background: #0d0d0d;
+  color: var(--white);
+  font-size: 14px;
+  padding: 0 50px 0 15px;
   cursor: pointer;
 }
-
-.booking-date-filter:focus {
-  border-color: var(--gold);
+.calendar-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
 }
 
-.booking-date-filter::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  cursor: pointer;
+.calendar-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.booking-date-filter:focus {
-  border-color: var(--gold);
+.booking-date-display::placeholder {
+  color: #777;
+}
+
+.booking-date-filter {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .clear-filters-btn {
@@ -333,15 +358,15 @@ input {
   }
 
   .date-filter-wrapper {
-  flex: 1;
-  min-width: 0;
-}
+    flex: 1;
+    min-width: 0;
+    height: 46px;
+  }
 
-.booking-date-filter {
-  width: 100%;
-  min-width: 0;
-  height: 46px;
-}
+  .booking-date-filter {
+    width: 100%;
+    height: 46px;
+  }
 
   .clear-filters-btn {
     width: auto;
@@ -349,6 +374,14 @@ input {
     height: 46px;
     padding: 0 16px;
   }
+  .mobile-date-hint {
+  display: block;
+  color: #777;
+  font-size: 14px;
+  pointer-events: none;
+  position: absolute;
+  left: 15px;
+}
 
 }
 
@@ -455,4 +488,7 @@ input {
   .booking-info {
     grid-template-columns: 1fr;
   }
+}
+.mobile-date-hint {
+  display: none;
 }
