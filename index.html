@@ -240,84 +240,125 @@
     target="_blank" class="whatsapp-button">
     WhatsApp
   </a>
-  <!-- Booking Form Overlay -->
-  <div class="booking-overlay" id="bookingOverlay">
+  
+<!-- Booking Form Overlay -->
+<div class="booking-overlay" id="bookingOverlay">
+  <div class="booking-form-box">
+    <button type="button" class="booking-close" id="closeBooking" aria-label="Close booking form">&times;</button>
 
-    <div class="booking-form-box">
+    <p class="eyebrow dark">PREETI STUDIO</p>
+    <h2>Book Your Event</h2>
+    <p class="booking-subtitle">Share your details and event requirements with us.</p>
 
-      <!-- Close Button -->
-      <button class="booking-close" id="closeBooking">&times;</button>
+    <form id="bookingForm">
+      <h3 class="booking-section-title">1. Booking Person Details</h3>
 
-      <h2>Book Your Event</h2>
-      <p class="booking-subtitle">
-        Fill in your details and we will contact you shortly.
-      </p>
+      <div class="form-group">
+        <label for="bookingName">Full Name *</label>
+        <input type="text" id="bookingName" placeholder="Enter your full name" autocomplete="name" required>
+      </div>
 
-      <form id="bookingForm">
+      <div class="form-group">
+        <label for="bookingPhone">Mobile Number *</label>
+        <input type="tel" id="bookingPhone" placeholder="10-digit mobile number"
+          inputmode="numeric" pattern="[0-9]{10}" maxlength="10"
+          autocomplete="tel-national" required>
+      </div>
 
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" id="bookingName" placeholder="Enter your name" required>
-        </div>
+      <div class="form-group">
+        <label for="bookingEmail">Gmail / Email Address *</label>
+        <input type="email" id="bookingEmail" placeholder="you@gmail.com"
+          autocomplete="email" required>
+      </div>
 
-        <div class="form-group">
-          <label>Mobile Number</label>
-          <input type="tel" id="bookingPhone" placeholder="Enter mobile number" required>
-        </div>
+      <div class="booking-divider"></div>
 
-        <div class="form-group">
-          <label>Event Type</label>
-          <select id="bookingEvent" required>
-            <option value="">Select Event</option>
-            <option>Wedding</option>
-            <option>Engagement</option>
-            <option>Haldi</option>
-            <option>Mehandi</option>
-            <option>Haldi + Mehandi + Wedding</option>
-            <option>Engagement + Haldi + Mehandi + Wedding</option>
-            <option>Chheka/Tilak + Haldi + Mehandi + Wedding</option>
-            <option>Pre-Wedding</option>
-            <option>Birthday</option>
-            <option>Other</option>
-          </select>
-        </div>
+      <h3 class="booking-section-title">2. Guardian Details</h3>
 
-        <div class="form-group">
-          <label>Event Date</label>
-          <input type="date" id="bookingDate" required>
-        </div>
+      <label class="self-check">
+        <input type="checkbox" id="guardianIsSelf" checked>
+        <span>Booking person is the guardian (Self)</span>
+      </label>
 
-        <div class="form-group">
-          <label>Event Location</label>
-          <input type="text" id="bookingLocation" placeholder="Enter event location" required>
-        </div>
+      <div class="form-group">
+        <label for="guardianName">Guardian Name *</label>
+        <input type="text" id="guardianName" placeholder="Guardian full name" required>
+      </div>
 
-        <div class="form-group">
-          <label>Required Service</label>
-          <select id="bookingService" required>
-            <option value="">Select Service</option>
-            <option>Photography</option>
-            <option>Videography</option>
-            <option>Photography + Videography</option>
-            <option>Photography + Videography + Drone</option>
-            <option>Crane / Live Show</option>
-            <option>Complete Package</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label for="guardianPhone">Guardian Mobile Number *</label>
+        <input type="tel" id="guardianPhone" placeholder="10-digit mobile number"
+          inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required>
+      </div>
 
-        <div class="form-group">
-          <label>Additional Details</label>
-          <textarea id="bookingMessage" placeholder="Tell us anything else about your event..."></textarea>
-        </div>
+      <div class="form-group">
+        <label for="guardianEmail">Guardian Email (Optional)</label>
+        <input type="email" id="guardianEmail" placeholder="guardian@gmail.com">
+      </div>
 
-        <button type="submit" class="booking-submit" id="bookingSubmit">
-           Send Booking Request
-        </button>
+      
+<div class="booking-divider"></div>
 
-      </form>
-
+<div class="events-heading">
+    <div>
+        <h3 class="booking-section-title">3. Event Details</h3>
+        <p class="booking-help">First select the event side and location.</p>
     </div>
+</div>
+
+<div class="event-common-details">
+    <label class="common-label">Event kis side ka hai? *</label>
+
+    <div class="event-side-options">
+        <label class="event-side-option">
+            <input type="radio" name="eventSide"
+                value="Bride (Girls)" required>
+            <span>Bride (Girls)</span>
+        </label>
+
+        <label class="event-side-option">
+            <input type="radio" name="eventSide"
+                value="Groom (Boys)" required>
+            <span>Groom (Boys)</span>
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label for="commonEventLocation">Event Location *</label>
+        <input type="text" id="commonEventLocation"
+            placeholder="Enter venue / city / address" required>
+    </div>
+</div>
+
+<div class="events-heading">
+    <p class="booking-help">Now add each function and its services.</p>
+    <button type="button" class="add-event-btn" id="addEventBtn">
+        + Add Event
+    </button>
+</div>
+
+<div id="eventList"></div>
+
+
+      <div id="eventList"></div>
+
+      <div class="form-group">
+        <label for="bookingMessage">Additional Message (Optional)</label>
+        <textarea id="bookingMessage" rows="4"
+          placeholder="Any special requirements or instructions?"></textarea>
+      </div>
+
+      <button type="submit" class="booking-submit" id="bookingSubmit">
+        Review Booking Details
+      </button>
+
+      <p class="booking-help booking-notice">
+        Please check all details before continuing.
+      </p>
+    </form>
   </div>
+</div>
+
 
   <script src="script.js"></script>
 </body>
