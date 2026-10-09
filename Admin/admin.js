@@ -424,7 +424,25 @@ if (copyIdBtn) {
           }
         );
 
-        const data = await response.json();
+        
+        const responseText = await response.text();
+        
+        let data;
+        
+        try {
+          data = JSON.parse(responseText);
+        } catch (error) {
+          console.error("Delete API response:", {
+            status: response.status,
+            url: response.url,
+            response: responseText
+          });
+        
+          throw new Error(
+            `Server returned HTML instead of JSON. HTTP status: ${response.status}. Check browser Console.`
+          );
+        }
+
 
         if (!response.ok) {
           throw new Error(data.message || "Failed to delete booking.");
@@ -645,10 +663,40 @@ deleteModeBtn.addEventListener("click", async () => {
   try {
 
     // Selected bookings delete karo
-    for (const bookingId of selectedBookings) {
+    
+deleteModeBtn.addEventListener("click", async () => {
 
+  if (!deleteMode) {
+    deleteMode = true;
+    selectedBookings.clear();
+    displayBookings(getFilteredBookings());
+    updateDeleteButton();
+    return;
+  }
+
+  if (selectedBookings.size === 0) {
+    deleteMode = false;
+    displayBookings(getFilteredBookings());
+    updateDeleteButton();
+    return;
+  }
+
+  const bookingIds = [...selectedBookings];
+  const count = bookingIds.length;
+
+  const confirmed = confirm(
+    `Are you sure you want to delete ${count} booking${count > 1 ? "s" : ""}?`
+  );
+
+  if (!confirmed) return;
+
+  deleteModeBtn.disabled = true;
+  deleteModeBtn.textContent = "Deleting...";
+
+  try {
+    for (const bookingId of bookingIds) {
       const response = await fetch(
-        `${API_URL}/api/admin/bookings/${bookingId}`,
+        `${API_URL}/api/admin/bookings/${encodeURIComponent(bookingId)}`,
         {
           method: "DELETE",
           headers: {
@@ -657,7 +705,22 @@ deleteModeBtn.addEventListener("click", async () => {
         }
       );
 
-      const data = await response.json();
+      const responseText = await response.text();
+      let data;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch (error) {
+        console.error("Delete API response:", {
+          status: response.status,
+          url: response.url,
+          response: responseText
+        });
+
+        throw new Error(
+          `Server returned HTML instead of JSON. HTTP status: ${response.status}. Check browser Console.`
+        );
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -666,17 +729,14 @@ deleteModeBtn.addEventListener("click", async () => {
       }
     }
 
-    // Local list se deleted bookings hatao
     allBookings = allBookings.filter(
-      booking => !selectedBookings.has(booking._id)
+      booking => !bookingIds.includes(booking._id)
     );
 
     selectedBookings.clear();
     deleteMode = false;
 
     totalBookings.textContent = allBookings.length;
-
-    // Updated bookings display karo
     displayBookings(getFilteredBookings());
     updateDeleteButton();
 
@@ -685,21 +745,16 @@ deleteModeBtn.addEventListener("click", async () => {
     );
 
   } catch (error) {
-
     console.error(error);
-
-    alert(
-      error.message || "Unable to delete booking."
-    );
+    alert(error.message || "Unable to delete booking.");
 
   } finally {
-
     deleteModeBtn.disabled = false;
     updateDeleteButton();
-
   }
 
 });
+
 
 
 // =========================
