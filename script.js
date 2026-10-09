@@ -369,7 +369,7 @@ if (submitButton) {
 try {
    
 const response = await fetch(
-    "http://localhost:3000/api/bookings",
+    "https://preeti-studio-backend.onrender.com",
     {
         method: "POST",
         headers: {
