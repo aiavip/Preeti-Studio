@@ -369,7 +369,7 @@ if (submitButton) {
 try {
    
 const response = await fetch(
-    "https://preeti-studio-backend.onrender.com",
+    "https://preeti-studio-backend.onrender.com/api/bookings",
     {
         method: "POST",
         headers: {
