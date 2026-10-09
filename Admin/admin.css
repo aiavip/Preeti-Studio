@@ -488,7 +488,705 @@ input {
   .booking-info {
     grid-template-columns: 1fr;
   }
+  .dashboard-top {
+  padding-top: 20px;
+}
 }
 .mobile-date-hint {
   display: none;
 }
+/* =========================
+   INDIVIDUAL DELETE BUTTON
+   ========================= */
+
+.delete-booking-btn {
+  margin-top: 16px;
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(220, 53, 69, 0.45);
+  border-radius: 10px;
+
+  background: rgba(220, 53, 69, 0.10);
+  color: #dc3545;
+
+  font-size: 0;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+/* Trash icon */
+
+.delete-booking-btn::before {
+  content: "🗑";
+  font-size: 18px;
+}
+
+
+/* Hover */
+
+.delete-booking-btn:hover {
+  background: rgba(220, 53, 69, 0.18);
+  border-color: #dc3545;
+  color: #ff4d5f;
+  transform: translateY(-1px);
+}
+
+
+/* Click */
+
+.delete-booking-btn:active {
+  transform: scale(0.94);
+}
+
+
+/* Disabled */
+
+.delete-booking-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+/* =========================
+   STICKY DASHBOARD TOP
+   ========================= */
+
+.dashboard-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: var(--black);
+
+  padding-top: 30px;
+  padding-bottom: 5px;
+}
+
+/* Header ka original margin sticky wrapper handle karega */
+.dashboard-top .dashboard-header {
+  margin-bottom: 20px;
+}
+
+/* Stats ke neeche thoda space */
+.dashboard-top .stats {
+  margin-bottom: 20px;
+}
+/* =========================
+   STICKY DASHBOARD TOP
+   ========================= */
+
+.dashboard-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: var(--black);
+
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+
+/* Dashboard Header */
+
+.dashboard-top .dashboard-header {
+  margin-bottom: 20px;
+}
+
+
+/* Stats */
+
+.dashboard-top .stats {
+  margin-bottom: 20px;
+}
+
+
+/* Bookings Controls */
+
+.dashboard-top .bookings-controls {
+  background: var(--black);
+
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .dashboard-top {
+    padding-top: 20px;
+  }
+
+}
+
+/* =========================
+   PC DASHBOARD COMPACT LAYOUT
+   ========================= */
+
+@media (min-width: 701px) {
+
+  /* Header spacing */
+  .dashboard-top .dashboard-header {
+    margin-bottom: 18px;
+  }
+
+  .dashboard-header {
+    gap: 12px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 34px;
+  }
+
+  /* Logout button compact */
+  .dashboard-header .logout-btn {
+    width: auto;
+    min-height: 38px;
+    padding: 7px 14px;
+    font-size: 14px;
+  }
+
+  /* Stats: remove unnecessary empty columns */
+  .dashboard-top .stats {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  /* Total bookings card smaller */
+  .dashboard-top .stat-card {
+    width: 190px;
+    flex: 0 0 190px;
+    padding: 16px 20px;
+    border-radius: 12px;
+  }
+
+  .dashboard-top .stat-card span {
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+
+  .dashboard-top .stat-card strong {
+    font-size: 28px;
+  }
+
+  /* Delete button: compact danger style, right side */
+  .dashboard-top .delete-mode-btn {
+    width: auto;
+    min-width: 0;
+    min-height: 38px;
+    padding: 7px 14px;
+
+    margin-left: auto;
+
+    border: 1px solid rgba(255, 77, 95, 0.55);
+    border-radius: 8px;
+
+    background: rgba(220, 53, 69, 0.12);
+    color: #ff6b6b;
+
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+  }
+
+  .dashboard-top .delete-mode-btn:hover {
+    background: rgba(220, 53, 69, 0.24);
+    border-color: #ff6b6b;
+  }
+
+  .dashboard-top .delete-mode-btn:active {
+    transform: scale(0.98);
+  }
+
+  .dashboard-top .delete-mode-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Bookings heading and Refresh */
+  .section-heading {
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .section-heading h2 {
+    font-size: 21px;
+  }
+
+  .section-heading .refresh-btn {
+    width: auto;
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+
+  /* Search field shorter */
+  .booking-tools {
+    margin-bottom: 12px;
+  }
+
+  .booking-search {
+    height: 36px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+
+  /* Date filter and Clear shorter */
+  .booking-filters {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .date-filter-wrapper {
+    height: 36px;
+  }
+
+  .booking-date-display {
+    font-size: 13px;
+  }
+
+  .booking-filters .clear-filters-btn {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+}
+
+/* ========================================
+   PREETI STUDIO - MOBILE ADMIN LAYOUT
+   ======================================== */
+
+@media (max-width: 700px) {
+
+  /* Main page */
+  .admin-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 14px 10px;
+    align-items: flex-start;
+  }
+
+  .dashboard {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Sticky top dashboard */
+  .dashboard-top {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 12px 0 10px;
+    background: var(--black);
+  }
+
+  /* Header */
+  .dashboard-top .dashboard-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 23px;
+    line-height: 1.3;
+  }
+
+  .admin-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  .dashboard-header .logout-btn {
+    width: auto;
+    flex-shrink: 0;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Total bookings and delete button */
+  .dashboard-top .stats {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .dashboard-top .stat-card {
+    width: auto;
+    min-width: 0;
+    padding: 14px 12px;
+    border-radius: 11px;
+  }
+
+  .dashboard-top .stat-card span {
+    font-size: 11px;
+    line-height: 1.4;
+    margin-bottom: 7px;
+  }
+
+  .dashboard-top .stat-card strong {
+    font-size: 27px;
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard-top .delete-mode-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    align-self: stretch;
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 77, 95, 0.55);
+    border-radius: 11px;
+    background: rgba(220, 53, 69, 0.12);
+    color: #ff6b6b;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+  }
+
+  .dashboard-top .delete-mode-btn:disabled {
+    opacity: 0.6;
+  }
+
+  /* Search, date and clear filters */
+  .dashboard-top .bookings-controls {
+    width: 100%;
+    padding: 8px 0 4px;
+    background: var(--black);
+  }
+
+  .bookings-controls .section-heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .section-heading h2 {
+    font-size: 19px;
+  }
+
+  .booking-count-text {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .section-heading .refresh-btn {
+    width: auto;
+    flex-shrink: 0;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .booking-tools {
+    margin-bottom: 10px;
+  }
+
+  .booking-search {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .booking-filters {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .date-filter-wrapper {
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    height: 42px;
+    padding: 0;
+  }
+
+  .booking-date-display {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0 38px 0 10px;
+    font-size: 13px;
+  }
+
+  .calendar-icon {
+    right: 10px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .calendar-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .booking-filters .clear-filters-btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 64px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  /* Booking section */
+  .bookings-section {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .bookings-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .booking-card {
+    width: 100%;
+    min-width: 0;
+    padding: 15px 12px;
+    border-radius: 11px;
+    overflow-wrap: anywhere;
+  }
+
+  .booking-card h3 {
+    font-size: 17px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    padding-right: 2px;
+  }
+
+  .booking-info {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .booking-info div {
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .booking-info span {
+    font-size: 10px;
+    letter-spacing: 0.7px;
+    margin-bottom: 3px;
+  }
+
+  /* Bulk-delete selection checkbox */
+  .booking-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .booking-checkbox {
+    width: 19px;
+    height: 19px;
+    accent-color: var(--gold);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Individual delete button */
+  .delete-booking-btn {
+    width: 42px;
+    height: 42px;
+    margin-top: 14px;
+  }
+
+  /* Login screen */
+  .login-card {
+    width: 100%;
+    max-width: 430px;
+    margin: 35px auto 0;
+    padding: 30px 20px;
+  }
+
+  .login-card h1 {
+    font-size: 26px;
+  }
+
+  .input-group input,
+  .login-btn {
+    min-height: 46px;
+  }
+
+  /* Messages */
+  .empty-message,
+  .loading-message {
+    padding: 25px 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 360px) {
+
+  .admin-page {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-top .stats {
+    gap: 7px;
+  }
+
+  .dashboard-top .stat-card {
+    padding: 12px 9px;
+  }
+
+  .dashboard-top .stat-card strong {
+    font-size: 24px;
+  }
+
+  .dashboard-top .delete-mode-btn {
+    padding: 7px;
+    font-size: 11px;
+  }
+
+  .bookings-section {
+    padding: 9px;
+  }
+
+  .booking-card {
+    padding: 13px 10px;
+  }
+
+  .booking-date-display {
+    padding-left: 8px;
+    padding-right: 32px;
+    font-size: 12px;
+  }
+
+  .calendar-icon {
+    right: 7px;
+  }
+
+  .booking-filters .clear-filters-btn {
+    min-width: 55px;
+    padding: 0 8px;
+  }
+}
+
+/* Event schedule and service details */
+.events-heading {
+  color: var(--gold);
+  margin-top: 22px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.events-list {
+  display: grid;
+  gap: 12px;
+}
+
+.event-detail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #151515;
+  overflow-wrap: anywhere;
+}
+
+.event-detail h4 {
+  grid-column: 1 / -1;
+  color: var(--gold-light);
+  font-size: 14px;
+}
+
+.event-detail div {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.event-detail span {
+  display: block;
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 4px;
+}
+
+.booking-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.booking-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold);
+}
+
+@media (max-width: 700px) {
+  .event-detail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .event-detail h4 {
+    grid-column: auto;
+  }
+}
+
