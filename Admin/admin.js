@@ -43,7 +43,7 @@ const clearFiltersBtn =
 const deleteModeBtn =
   document.getElementById("deleteModeBtn");
 let deleteMode = false;
-let selectedBookings = new Set();  
+let selectedBookings = new Set();
 // const dateFilterText =
 //   document.getElementById("dateFilterText");
 
@@ -227,11 +227,11 @@ function displayBookings(bookings) {
 
     const eventHTML = events.length
       ? events.map((event, index) => {
-          const services = Array.isArray(event.services)
-            ? event.services.join(", ")
-            : "N/A";
+        const services = Array.isArray(event.services)
+          ? event.services.join(", ")
+          : "N/A";
 
-          return `
+        return `
             <div class="event-detail">
               <h4>Event ${index + 1}: ${escapeHTML(event.type || "N/A")}</h4>
               <div>
@@ -256,7 +256,7 @@ function displayBookings(bookings) {
               </div>
             </div>
           `;
-        }).join("")
+      }).join("")
       : `
         <p class="empty-message">
           Detailed event information is not available for this booking.
@@ -277,8 +277,7 @@ function displayBookings(bookings) {
   <span>Unique Request ID</span>
   <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
     <code style="color: var(--gold); overflow-wrap: anywhere;">${escapeHTML(booking.requestId || "Not available")}</code>
-    ${
-      booking.requestId
+    ${booking.requestId
         ? `<button
              type="button"
              class="copy-request-id-btn"
@@ -286,7 +285,7 @@ function displayBookings(bookings) {
              style="padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: #222; color: white; cursor: pointer;"
            >Copy ID</button>`
         : ""
-    }
+      }
   </div>
 </div>
 
@@ -359,24 +358,24 @@ function displayBookings(bookings) {
     `;
 
     bookingsContainer.appendChild(bookingCard);
-    
-const copyIdBtn = bookingCard.querySelector(".copy-request-id-btn");
 
-if (copyIdBtn) {
-  copyIdBtn.addEventListener("click", async () => {
-    const requestId = copyIdBtn.dataset.requestId;
+    const copyIdBtn = bookingCard.querySelector(".copy-request-id-btn");
 
-    try {
-      await navigator.clipboard.writeText(requestId);
-      copyIdBtn.textContent = "Copied!";
-      setTimeout(() => {
-        copyIdBtn.textContent = "Copy ID";
-      }, 1500);
-    } catch (error) {
-      alert("ID copy nahi hua. Please manually copy karein.");
+    if (copyIdBtn) {
+      copyIdBtn.addEventListener("click", async () => {
+        const requestId = copyIdBtn.dataset.requestId;
+
+        try {
+          await navigator.clipboard.writeText(requestId);
+          copyIdBtn.textContent = "Copied!";
+          setTimeout(() => {
+            copyIdBtn.textContent = "Copy ID";
+          }, 1500);
+        } catch (error) {
+          alert("ID copy nahi hua. Please manually copy karein.");
+        }
+      });
     }
-  });
-}
 
 
     const checkbox = bookingCard.querySelector(".booking-checkbox");
@@ -424,11 +423,11 @@ if (copyIdBtn) {
           }
         );
 
-        
+
         const responseText = await response.text();
-        
+
         let data;
-        
+
         try {
           data = JSON.parse(responseText);
         } catch (error) {
@@ -437,7 +436,7 @@ if (copyIdBtn) {
             url: response.url,
             response: responseText
           });
-        
+
           throw new Error(
             `Server returned HTML instead of JSON. HTTP status: ${response.status}. Check browser Console.`
           );
@@ -507,9 +506,16 @@ function applyFilters() {
         location.includes(searchText);
 
 
+
       const matchesDate =
         !selectedDate ||
-        bookingDate === selectedDate;
+        String(booking.date || "").slice(0, 10) === selectedDate ||
+        (Array.isArray(booking.events) &&
+          booking.events.some(
+            (event) =>
+              String(event.date || "").slice(0, 10) === selectedDate
+          ));
+
 
 
       return matchesSearch && matchesDate;
@@ -616,7 +622,7 @@ function escapeHTML(value) {
 
 }
 
- // =========================
+// =========================
 // UPDATE DELETE BUTTON
 // =========================
 
@@ -634,13 +640,23 @@ function updateDeleteButton() {
 }
 
 
- // =========================
+// =========================
 // FILTERED BOOKINGS
 // =========================
 
 function getFilteredBookings() {
   const searchText = bookingSearch.value.trim().toLowerCase();
   const selectedDate = bookingDateFilter.value;
+  console.log("Selected date:", selectedDate);
+
+  console.table(
+    allBookings.map((booking) => ({
+      name: booking.name || booking.bookingPerson?.name,
+      bookingDate: booking.date,
+      events: JSON.stringify(booking.events)
+    }))
+  );
+
 
   return allBookings.filter((booking) => {
     const name = String(
@@ -655,7 +671,7 @@ function getFilteredBookings() {
       booking.location || booking.eventLocation || ""
     ).toLowerCase();
 
-    const bookingDate = String(booking.date || "");
+    const bookingDate = String(booking.date || "").slice(0, 10);
 
     const matchesSearch =
       !searchText ||
@@ -663,20 +679,27 @@ function getFilteredBookings() {
       phone.includes(searchText) ||
       location.includes(searchText);
 
+
+
+
     const matchesDate =
       !selectedDate ||
-      bookingDate === selectedDate ||
+      String(booking.date || "").slice(0, 10) === selectedDate ||
       (Array.isArray(booking.events) &&
         booking.events.some(
-          (event) => String(event.date || "") === selectedDate
+          (event) =>
+            String(event.date || "").slice(0, 10) === selectedDate
         ));
+
+
+
 
     return matchesSearch && matchesDate;
   });
 }
 
 
- // =========================
+// =========================
 // BULK DELETE MODE
 // =========================
 
@@ -757,8 +780,8 @@ deleteModeBtn.addEventListener("click", async () => {
     updateDeleteButton();
   }
 });
-  
- // =========================
+
+// =========================
 // DATE PICKER OPEN
 // =========================
 
@@ -771,9 +794,454 @@ bookingDateDisplay.addEventListener("click", () => {
   }
 });
 
+// =========================
+// yaha se add booking ke liye hai 
+// =========================
+
+/* =========================
+   ADD BOOKING FORM
+========================= */
+
+const addBookingBtn = document.getElementById("addBookingBtn");
+const addBookingModal = document.getElementById("addBookingModal");
+const closeBookingModal = document.getElementById("closeBookingModal");
+const cancelAddBooking = document.getElementById("cancelAddBooking");
+const addBookingForm = document.getElementById("addBookingForm");
+const addBookingError = document.getElementById("addBookingError");
+const saveAddBookingBtn = document.getElementById("saveAddBookingBtn");
+const addAnotherEventBtn = document.getElementById("addAnotherEventBtn");
+const newBookingEvents = document.getElementById("newBookingEvents");
+
+const addPersonName = document.getElementById("addPersonName");
+const addPersonPhone = document.getElementById("addPersonPhone");
+const addPersonEmail = document.getElementById("addPersonEmail");
+const addEventSide = document.getElementById("addEventSide");
+const addEventLocation = document.getElementById("addEventLocation");
+
+const addGuardianIsSelf = document.getElementById("addGuardianIsSelf");
+const addGuardianName = document.getElementById("addGuardianName");
+const addGuardianPhone = document.getElementById("addGuardianPhone");
+const addGuardianEmail = document.getElementById("addGuardianEmail");
+
+const addBookingMessage = document.getElementById("addBookingMessage");
+
+const availableEventTypes = [
+  "Engagement",
+  "Tilak/Chheka",
+  "Haldi",
+  "Mehandi",
+  "Wedding (Shadi)",
+  "Reception",
+  "Pre-Wedding",
+  "Other"
+];
+
+const availableServices = [
+  "Photography",
+  "Videography",
+  "Drone Shoot",
+  "Crane Live Show",
+  "Only Pendrive",
+  "Album & Pendrive"
+
+];
+
+let newEventCounter = 0;
+
+function openAddBookingModal() {
+  if (!currentPassword) {
+    alert("Please log in to the Admin Portal first.");
+    return;
+  }
+
+  addBookingForm.reset();
+  newBookingEvents.innerHTML = "";
+  addBookingError.textContent = "";
+  saveAddBookingBtn.disabled = false;
+  saveAddBookingBtn.textContent = "Save Booking";
+  addGuardianIsSelf.checked = true;
+
+  syncGuardianFields();
+  addEventCard();
+
+  addBookingModal.hidden = false;
+  addPersonName.focus();
+}
+
+function closeAddBookingModal() {
+  if (saveAddBookingBtn.disabled) return;
+
+  addBookingModal.hidden = true;
+  addBookingError.textContent = "";
+}
+
+addBookingBtn.addEventListener("click", openAddBookingModal);
+closeBookingModal.addEventListener("click", closeAddBookingModal);
+cancelAddBooking.addEventListener("click", closeAddBookingModal);
+
+addBookingModal.addEventListener("click", (event) => {
+  if (event.target === addBookingModal) {
+    closeAddBookingModal();
+  }
+});
+
+function syncGuardianFields() {
+  const isSelf = addGuardianIsSelf.checked;
+
+  if (isSelf) {
+    addGuardianName.value = addPersonName.value.trim();
+    addGuardianPhone.value = addPersonPhone.value.trim();
+    addGuardianEmail.value = addPersonEmail.value.trim();
+
+    addGuardianName.readOnly = true;
+    addGuardianPhone.readOnly = true;
+    addGuardianEmail.readOnly = true;
+  } else {
+    addGuardianName.readOnly = false;
+    addGuardianPhone.readOnly = false;
+    addGuardianEmail.readOnly = false;
+  }
+}
+
+[
+  addPersonName,
+  addPersonPhone,
+  addPersonEmail
+].forEach((field) => {
+  field.addEventListener("input", () => {
+    if (addGuardianIsSelf.checked) {
+      syncGuardianFields();
+    }
+  });
+});
+
+addGuardianIsSelf.addEventListener("change", syncGuardianFields);
+
+function addEventCard() {
+  const eventId = ++newEventCounter;
+  const card = document.createElement("div");
+  card.className = "new-event-card";
+  card.dataset.eventId = String(eventId);
+
+  const eventOptions = availableEventTypes.map((type) =>
+    `<option value="${escapeHTML(type)}">${escapeHTML(type)}</option>`
+  ).join("");
+
+  const serviceOptions = availableServices.map((service) => `
+    <label class="service-option">
+      <input type="checkbox" value="${escapeHTML(service)}">
+      <span>${escapeHTML(service)}</span>
+    </label>
+  `).join("");
+
+  card.innerHTML = `
+    
+<div class="new-event-card-header">
+  <h4>Event ${newBookingEvents.children.length + 1}</h4>
+
+  <div class="event-header-actions">
+    ${newBookingEvents.children.length >= 1
+      ? `<button type="button" class="add-event-inline-btn">+ Add Event</button>`
+      : ""
+    }
+
+    <button type="button" class="remove-event-btn">Remove Event</button>
+  </div>
+</div>
+
+
+    <div class="add-form-grid">
+      <div class="add-form-field">
+        <label>Event Type *</label>
+        <select class="new-event-type" required>
+          <option value="">Select event</option>
+          ${eventOptions}
+        </select>
+      </div>
+
+      <div class="add-form-field">
+        <label>Custom Event Name</label>
+        <input type="text" class="new-event-custom"
+          placeholder="Only for Other" maxlength="80" disabled>
+      </div>
+
+      <div class="add-form-field">
+        <label>Event Date *</label>
+        <input type="date" class="new-event-date" required>
+      </div>
+
+      <div class="add-form-field">
+        <label>Start Time </label>
+        <input type="time" class="new-event-start-time">
+      </div>
+
+      <div class="add-form-field">
+        <label>End Date </label>
+        <input type="date" class="new-event-end-date">
+      </div>
+
+      <div class="add-form-field">
+        <label>End Time </label>
+        <input type="time" class="new-event-end-time">
+      </div>
+
+      <div class="add-form-field full-width">
+        <label>Services * (Select at least one)</label>
+        <div class="service-options">${serviceOptions}</div>
+      </div>
+    </div>
+  `;
+
+  const typeSelect = card.querySelector(".new-event-type");
+  const customInput = card.querySelector(".new-event-custom");
+
+  typeSelect.addEventListener("change", () => {
+    const isOther = typeSelect.value === "Other";
+    customInput.disabled = !isOther;
+    customInput.required = isOther;
+
+    if (!isOther) customInput.value = "";
+  });
+
+  card.querySelector(".remove-event-btn").addEventListener("click", () => {
+    if (newBookingEvents.children.length <= 1) {
+      addBookingError.textContent =
+        "At least one event is required.";
+      return;
+    }
+
+    card.remove();
+    updateNewEventNumbers();
+  });
+  
+const addInlineEventBtn = card.querySelector(".add-event-inline-btn");
+
+if (addInlineEventBtn) {
+  addInlineEventBtn.addEventListener("click", () => {
+    addBookingError.textContent = "";
+    addEventCard();
+
+    const lastEvent = newBookingEvents.lastElementChild;
+
+    if (lastEvent) {
+      setTimeout(() => {
+        lastEvent.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+        window.scrollBy({
+          top: 180,
+          behavior: "smooth"
+        });
+      }, 100);
+    }
+  });
+}
+
+
+    newBookingEvents.appendChild(card);
+  updateNewEventNumbers();
+}
+
+function updateNewEventNumbers() {
+  [...newBookingEvents.children].forEach((card, index) => {
+    card.querySelector("h4").textContent = `Event ${index + 1}`;
+  });
+}
+
+
+addAnotherEventBtn.addEventListener("click", () => {
+  addBookingError.textContent = "";
+
+  // Add new event at the bottom
+  addEventCard();
+
+  // Always scroll to the last event
+  const lastEvent = newBookingEvents.lastElementChild;
+
+  if (lastEvent) {
+    setTimeout(() => {
+      lastEvent.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      // Scroll a little further down
+      window.scrollBy({
+        top: 180,
+        behavior: "smooth"
+      });
+    }, 100);
+  }
+});
+
+
+
+function collectNewEvents() {
+  const events = [];
+
+  for (const card of newBookingEvents.children) {
+    const typeValue = card.querySelector(".new-event-type").value;
+    const customType = card.querySelector(".new-event-custom").value.trim();
+
+    const event = {
+      type: typeValue === "Other" ? customType : typeValue,
+      date: card.querySelector(".new-event-date").value,
+      startTime: card.querySelector(".new-event-start-time").value,
+      endDate: card.querySelector(".new-event-end-date").value,
+      endTime: card.querySelector(".new-event-end-time").value,
+      services: [
+        ...card.querySelectorAll(".service-options input:checked")
+      ].map((input) => input.value)
+    };
+
+    if (
+      !event.type ||
+      !event.date ||
+      event.services.length === 0
+    ) {
+      throw new Error(
+        "Har event ka type, event date aur kam se kam ek service select karo."
+      );
+    }
+
+
+
+    // Check the event duration only when all optional
+    // date/time fields have been supplied.
+    if (event.startTime && event.endDate && event.endTime) {
+      const start = new Date(`${event.date}T${event.startTime}`);
+      const end = new Date(`${event.endDate}T${event.endTime}`);
+
+      if (
+        Number.isNaN(start.getTime()) ||
+        Number.isNaN(end.getTime()) ||
+        end <= start
+      ) {
+        throw new Error(
+          "End date/time, start date/time ke baad hona chahiye."
+        );
+      }
+    }
+
+    events.push(event);
+  }
+
+  if (events.length === 0) {
+    throw new Error("At least one event is required.");
+  }
+
+  return events;
+}
+
+addBookingForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  addBookingError.textContent = "";
+
+  if (!currentPassword) {
+    addBookingError.textContent =
+      "Session expired. Please log in again.";
+    return;
+  }
+
+  const personName = addPersonName.value.trim();
+  const personPhone = addPersonPhone.value.trim();
+  const personEmail = addPersonEmail.value.trim();
+  const guardianName = addGuardianName.value.trim();
+  const guardianPhone = addGuardianPhone.value.trim();
+  const guardianEmail = addGuardianEmail.value.trim();
+
+  if (
+    !personName ||
+    !personPhone ||
+    !personEmail ||
+    !guardianName ||
+    !guardianPhone ||
+    !addEventSide.value ||
+    !addEventLocation.value.trim()
+  ) {
+    addBookingError.textContent =
+      "Please fill in all required booking details.";
+    return;
+  }
+
+  let events;
+
+  try {
+    events = collectNewEvents();
+  } catch (error) {
+    addBookingError.textContent = error.message;
+    return;
+  }
+
+  const requestId =
+    `PS-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+
+  const payload = {
+    requestId,
+    bookingPerson: {
+      name: personName,
+      phone: personPhone,
+      email: personEmail
+    },
+    guardian: {
+      isSelf: addGuardianIsSelf.checked,
+      name: guardianName,
+      phone: guardianPhone,
+      email: guardianEmail
+    },
+    eventSide: addEventSide.value,
+    eventLocation: addEventLocation.value.trim(),
+    events,
+    message: addBookingMessage.value.trim()
+  };
+
+  saveAddBookingBtn.disabled = true;
+  saveAddBookingBtn.textContent = "Saving...";
+
+  try {
+    const response = await fetch(`${API_URL}/api/bookings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const responseText = await response.text();
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        `Invalid server response. HTTP status: ${response.status}`
+      );
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Booking could not be saved.");
+    }
+
+    addBookingModal.hidden = true;
+    addBookingForm.reset();
+    await loadBookings();
+    displayBookings(getFilteredBookings());
+
+    alert("Booking saved successfully!");
+
+  } catch (error) {
+    console.error("Add booking failed:", error);
+    addBookingError.textContent =
+      error.message || "Unable to connect to the server.";
+  } finally {
+    saveAddBookingBtn.disabled = false;
+    saveAddBookingBtn.textContent = "Save Booking";
+  }
+});
 
 
 
 
 
- 
