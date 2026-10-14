@@ -1,24 +1,24 @@
-const nav=document.querySelector('.nav');
-document.querySelector('.menu').addEventListener('click',()=>nav.classList.toggle('open'));
-document.querySelectorAll('.nav nav a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const nav = document.querySelector('.nav');
+document.querySelector('.menu').addEventListener('click', () => nav.classList.toggle('open'));
+document.querySelectorAll('.nav nav a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 
-const filters=document.querySelectorAll('.filter');
-const items=document.querySelectorAll('.gallery-item');
+const filters = document.querySelectorAll('.filter');
+const items = document.querySelectorAll('.gallery-item');
 
-filters.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    filters.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
+filters.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filters.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-    const f=btn.dataset.filter;
+        const f = btn.dataset.filter;
 
-    items.forEach(item=>{
-      item.style.display=(f==='all'||item.classList.contains(f))?'block':'none';
+        items.forEach(item => {
+            item.style.display = (f === 'all' || item.classList.contains(f)) ? 'block' : 'none';
+        });
     });
-  });
 });
 
-document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('year').textContent = new Date().getFullYear();
 
 
 /* =========================
@@ -33,7 +33,7 @@ const bookingOverlay = document.getElementById("bookingOverlay");
 // Open Booking Form
 openBookingButtons.forEach(button => {
 
-    button.addEventListener("click", function(e) {
+    button.addEventListener("click", function (e) {
 
         e.preventDefault();
 
@@ -47,7 +47,7 @@ openBookingButtons.forEach(button => {
 
 
 // Close Booking Form
-closeBooking.addEventListener("click", function() {
+closeBooking.addEventListener("click", function () {
 
     bookingOverlay.classList.remove("active");
 
@@ -56,7 +56,7 @@ closeBooking.addEventListener("click", function() {
 
 
 // Close when clicking outside the form
-bookingOverlay.addEventListener("click", function(e) {
+bookingOverlay.addEventListener("click", function (e) {
 
     if (e.target === bookingOverlay) {
 
@@ -124,6 +124,7 @@ function syncGuardianDetails() {
 
 guardianIsSelf.addEventListener("change", syncGuardianDetails);
 
+
 function createEventCard() {
     eventCounter++;
 
@@ -133,7 +134,15 @@ function createEventCard() {
     card.innerHTML = `
         <div class="event-card-heading">
             <h4 class="event-title">Event ${eventCounter}</h4>
-            <button type="button" class="remove-event-btn">Remove</button>
+
+            <div class="event-header-actions">
+                <button type="button" class="add-event-inline-btn">
+                    + Add Event
+                </button>
+                <button type="button" class="remove-event-btn">
+                    Remove
+                </button>
+            </div>
         </div>
 
         <div class="event-fields">
@@ -152,7 +161,6 @@ function createEventCard() {
                     <option>Other</option>
                 </select>
             </div>
-            
 
             <div class="form-group">
                 <label>Event Date *</label>
@@ -160,21 +168,19 @@ function createEventCard() {
             </div>
 
             <div class="form-group">
-                <label>Start Time *</label>
-                <input type="time" class="event-start" required>
+                <label>Start Time (Optional)</label>
+                <input type="time" class="event-start">
             </div>
 
-           
             <div class="form-group">
-                <label>End Date *</label>
-                <input type="date" class="event-end-date" required>
+                <label>End Date (Optional)</label>
+                <input type="date" class="event-end-date">
             </div>
-            
+
             <div class="form-group">
-                <label>End Time *</label>
-                <input type="time" class="event-end" required>
+                <label>End Time (Optional)</label>
+                <input type="time" class="event-end">
             </div>
-            
         </div>
 
         <p class="service-title">Required Services * (Select at least one)</p>
@@ -205,8 +211,9 @@ function createEventCard() {
     const dateInput = card.querySelector(".event-date");
     const endDateInput = card.querySelector(".event-end-date");
 
-    // Past dates are not selectable.
+    // Past event dates are not selectable.
     const today = new Date();
+
     const localToday = [
         today.getFullYear(),
         String(today.getMonth() + 1).padStart(2, "0"),
@@ -216,29 +223,101 @@ function createEventCard() {
     dateInput.min = localToday;
     endDateInput.min = localToday;
 
-    card.querySelector(".remove-event-btn").addEventListener("click", () => {
-        card.remove();
-        updateEventTitles();
-    });
+    // Add another event from this event's header.
+
+    card.querySelector(".add-event-inline-btn")
+        .addEventListener("click", () => {
+            createEventCard();
+
+            const newCard = eventList.lastElementChild;
+            const formBox = document.querySelector(".booking-form-box");
+
+            if (newCard && formBox) {
+                requestAnimationFrame(() => {
+                    const boxRect = formBox.getBoundingClientRect();
+                    const cardRect = newCard.getBoundingClientRect();
+
+                    const targetScrollTop =
+                        formBox.scrollTop +
+                        cardRect.top -
+                        boxRect.top -
+                        20;
+
+                    formBox.scrollTo({
+                        top: Math.max(0, targetScrollTop),
+                        behavior: "smooth"
+                    });
+                });
+            }
+        });
+
+
+    // Remove this event.
+    card.querySelector(".remove-event-btn")
+        .addEventListener("click", () => {
+            if (eventList.querySelectorAll(".event-card").length <= 1) {
+                return;
+            }
+
+            card.remove();
+            updateEventTitles();
+        });
 
     eventList.appendChild(card);
     updateEventTitles();
 }
 
+
 function updateEventTitles() {
     const cards = eventList.querySelectorAll(".event-card");
 
     cards.forEach((card, index) => {
-        card.querySelector(".event-title").textContent = `Event ${index + 1}`;
+        card.querySelector(".event-title").textContent =
+            `Event ${index + 1}`;
 
-        const removeButton = card.querySelector(".remove-event-btn");
+        // Event 1 has no inline Add Event button.
+        // Event 2 onwards have the inline Add Event button.
+        const inlineAddButton =
+            card.querySelector(".add-event-inline-btn");
+
+        inlineAddButton.style.display =
+            index === 0 ? "none" : "inline-block";
+
+        // Keep Remove available, but disable it if only one event remains.
+        const removeButton =
+            card.querySelector(".remove-event-btn");
+
         removeButton.disabled = cards.length === 1;
-        removeButton.style.opacity = cards.length === 1 ? "0.45" : "1";
-        removeButton.style.cursor = cards.length === 1 ? "not-allowed" : "pointer";
+        removeButton.style.opacity =
+            cards.length === 1 ? "0.45" : "1";
+
+        removeButton.style.cursor =
+            cards.length === 1 ? "not-allowed" : "pointer";
     });
 }
 
-addEventBtn.addEventListener("click", createEventCard);
+
+// addEventBtn.addEventListener("click", createEventCard);
+
+addEventBtn.addEventListener("click", () => {
+    createEventCard();
+
+    const newCard = eventList.lastElementChild;
+    const formBox = document.querySelector(".booking-form-box");
+
+    if (!newCard || !formBox) return;
+
+    requestAnimationFrame(() => {
+        const cardTop = newCard.getBoundingClientRect().top;
+        const boxTop = formBox.getBoundingClientRect().top;
+
+        formBox.scrollTo({
+            top: formBox.scrollTop + cardTop - boxTop - 20,
+            behavior: "smooth"
+        });
+    });
+});
+
 
 guardianIsSelf.checked = true;
 createEventCard();
@@ -267,34 +346,34 @@ bookingForm.addEventListener("submit", async function (e) {
         guardianPhone.focus();
         return;
     }
-    
-const selectedEventSide = document.querySelector(
-    'input[name="eventSide"]:checked'
-);
 
-if (!selectedEventSide) {
-    alert("Please select whether the event is for Bride (Girls) or Groom (Boys).");
-    document.querySelector(".event-common-details")
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-}
+    const selectedEventSide = document.querySelector(
+        'input[name="eventSide"]:checked'
+    );
 
-const eventSide = selectedEventSide.value;
-const eventLocation = eventLocationInput.value.trim();
+    if (!selectedEventSide) {
+        alert("Please select whether the event is for Bride (Girls) or Groom (Boys).");
+        document.querySelector(".event-common-details")
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+    }
 
-if (!eventLocation) {
-    alert("Please enter the event location.");
-    eventLocationInput.focus();
-    return;
-}
+    const eventSide = selectedEventSide.value;
+    const eventLocation = eventLocationInput.value.trim();
+
+    if (!eventLocation) {
+        alert("Please enter the event location.");
+        eventLocationInput.focus();
+        return;
+    }
 
 
     const cards = [...eventList.querySelectorAll(".event-card")];
 
     const events = cards.map(card => {
-       const start = card.querySelector(".event-start").value;
-       const endDate = card.querySelector(".event-end-date").value;
-       const end = card.querySelector(".event-end").value;
+        const start = card.querySelector(".event-start").value;
+        const endDate = card.querySelector(".event-end-date").value;
+        const end = card.querySelector(".event-end").value;
 
         const services = [
             ...card.querySelectorAll(".event-service:checked")
@@ -319,97 +398,116 @@ if (!eventLocation) {
             return;
         }
 
-       const eventStart = new Date(`${event.date}T${event.startTime}`);
-       const eventEnd = new Date(`${event.endDate}T${event.endTime}`);
 
-       if (eventEnd <= eventStart) {
-           alert(`Event ${i + 1}: End date and time must be later than start date and time.`);
-           cards[i].querySelector(".event-end-date").focus();
-           return;
-}
+        const hasStartTime = Boolean(event.startTime);
+        const hasEndDate = Boolean(event.endDate);
+        const hasEndTime = Boolean(event.endTime);
+
+        // End Date cannot be earlier than Event Date.
+        if (hasEndDate && event.endDate < event.date) {
+            alert(`Event ${i + 1}: End Date cannot be earlier than Event Date.`);
+            cards[i].querySelector(".event-end-date").focus();
+            return;
+        }
+
+        // If End Date is empty or the same as Event Date,
+        // End Time must be later than Start Time.
+        const isSameDay = !hasEndDate || event.endDate === event.date;
+
+        if (isSameDay && hasStartTime && hasEndTime) {
+            if (event.endTime <= event.startTime) {
+                alert(
+                    `Event ${i + 1}: For a same-day event, End Time must be later than Start Time.`
+                );
+                cards[i].querySelector(".event-end").focus();
+                return;
+            }
+        }
+
+
     }
 
     // Frontend preview only. No booking is sent to the backend yet.
-   
 
-const bookingPreview = {
-    requestId: crypto.randomUUID(),
 
-    bookingPerson: {
-        name: bookingName.value.trim(),
-        phone: bookingPhone.value.trim(),
-        email: bookingEmail.value.trim()
-    },
+    const bookingPreview = {
+        requestId: crypto.randomUUID(),
 
-    guardian: {
-        isSelf: guardianIsSelf.checked,
-        name: guardianName.value.trim(),
-        phone: guardianPhone.value.trim(),
-        email: guardianEmail.value.trim()
-    },
-
-    eventSide: eventSide,
-    eventLocation: eventLocation,
-    events,
-    message: bookingMessage.value.trim()
-};
-
-const submitButton =
-    e.submitter || bookingForm.querySelector('[type="submit"]');
-
-const originalButtonText = submitButton
-    ? submitButton.textContent
-    : "";
-
-if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Sending Request...";
-}
-
-try {
-   
-const response = await fetch(
-    "https://preeti-studio-backend.onrender.com/api/bookings",
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
+        bookingPerson: {
+            name: bookingName.value.trim(),
+            phone: bookingPhone.value.trim(),
+            email: bookingEmail.value.trim()
         },
-        body: JSON.stringify(bookingPreview)
-    }
-);
 
+        guardian: {
+            isSelf: guardianIsSelf.checked,
+            name: guardianName.value.trim(),
+            phone: guardianPhone.value.trim(),
+            email: guardianEmail.value.trim()
+        },
 
-    const result = await response.json();
+        eventSide: eventSide,
+        eventLocation: eventLocation,
+        events,
+        message: bookingMessage.value.trim()
+    };
 
-    if (!response.ok || !result.success) {
-        throw new Error(
-            result.message || "Booking submission failed."
-        );
-    }
+    const submitButton =
+        e.submitter || bookingForm.querySelector('[type="submit"]');
 
-    alert(
-        "Booking request successfully submitted!\n\n" +
-        "Events: " + events.length +
-        "\nYour booking request has been received."
-    );
+    const originalButtonText = submitButton
+        ? submitButton.textContent
+        : "";
 
-    console.log("Booking API response:", result);
-
-} catch (error) {
-    console.error("Booking submission failed:", error);
-
-    alert(
-        "Booking submit nahi ho payi.\n\n" +
-        (error.message || "Please try again.")
-    );
-
-} finally {
     if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalButtonText;
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending Request...";
     }
-}
+
+    try {
+
+        const response = await fetch(
+            "https://preeti-studio-backend.onrender.com/api/bookings",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bookingPreview)
+            }
+        );
+
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || "Booking submission failed."
+            );
+        }
+
+        alert(
+            "Booking request successfully submitted!\n\n" +
+            "Events: " + events.length +
+            "\nYour booking request has been received."
+        );
+
+        console.log("Booking API response:", result);
+
+    } catch (error) {
+        console.error("Booking submission failed:", error);
+
+        alert(
+            "Booking submit nahi ho payi.\n\n" +
+            (error.message || "Please try again.")
+        );
+
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        }
+    }
 });
 
 

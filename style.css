@@ -1470,3 +1470,36 @@ footer>div>p {
         grid-template-columns: 1fr;
     }
 }
+
+.event-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.add-event-inline-btn {
+    border: 1px solid #bd8a28;
+    background: #fffaf0;
+    color: #7d5815;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font: 700 12px "DM Sans", sans-serif;
+    cursor: pointer;
+}
+
+.add-event-inline-btn:hover {
+    background: #bd8a28;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .event-header-actions {
+        gap: 6px;
+    }
+
+    .add-event-inline-btn {
+        padding: 7px 8px;
+    }
+}
