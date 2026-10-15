@@ -88,6 +88,219 @@ const guardianEmail = document.getElementById("guardianEmail");
 
 const bookingMessage = document.getElementById("bookingMessage");
 const bookingSubmit = document.getElementById("bookingSubmit");
+/* ===================================
+   Customer Signature Start
+=================================== */
+
+/* =========================
+   CUSTOMER SIGNATURE
+========================= */
+
+const signatureCanvas = document.getElementById("signatureCanvas");
+const signatureContext = signatureCanvas.getContext("2d");
+
+const signatureDrawTab = document.getElementById("signatureDrawTab");
+const signatureUploadTab = document.getElementById("signatureUploadTab");
+
+const signatureDrawPanel = document.getElementById("signatureDrawPanel");
+const signatureUploadPanel = document.getElementById("signatureUploadPanel");
+
+const clearSignatureBtn = document.getElementById("clearSignatureBtn");
+const signatureFile = document.getElementById("signatureFile");
+const signatureUploadPreview = document.getElementById("signatureUploadPreview");
+const removeUploadedSignature = document.getElementById("removeUploadedSignature");
+const signatureStatus = document.getElementById("signatureStatus");
+
+let signatureMode = "draw";
+let signatureIsDrawing = false;
+let signatureHasDrawing = false;
+let uploadedSignatureData = "";
+
+signatureContext.lineWidth = 3;
+signatureContext.lineCap = "round";
+signatureContext.lineJoin = "round";
+signatureContext.strokeStyle = "#111111";
+
+function setSignatureMode(mode) {
+    signatureMode = mode;
+
+    signatureDrawPanel.hidden = mode !== "draw";
+    signatureUploadPanel.hidden = mode !== "upload";
+
+    signatureDrawTab.classList.toggle("active", mode === "draw");
+    signatureUploadTab.classList.toggle("active", mode === "upload");
+
+    signatureStatus.textContent =
+        mode === "draw"
+            ? "Draw your signature in the box above."
+            : "Choose a clear PNG or JPG signature image.";
+}
+
+signatureDrawTab.addEventListener("click", () => {
+    setSignatureMode("draw");
+});
+
+signatureUploadTab.addEventListener("click", () => {
+    setSignatureMode("upload");
+});
+
+function getCanvasPosition(event) {
+    const rect = signatureCanvas.getBoundingClientRect();
+
+    return {
+        x: (event.clientX - rect.left) *
+            (signatureCanvas.width / rect.width),
+
+        y: (event.clientY - rect.top) *
+            (signatureCanvas.height / rect.height)
+    };
+}
+
+signatureCanvas.addEventListener("pointerdown", event => {
+    event.preventDefault();
+
+    signatureIsDrawing = true;
+    signatureHasDrawing = true;
+
+    signatureCanvas.setPointerCapture(event.pointerId);
+
+    const position = getCanvasPosition(event);
+
+    signatureContext.beginPath();
+    signatureContext.moveTo(position.x, position.y);
+    signatureContext.lineTo(position.x + 0.1, position.y + 0.1);
+    signatureContext.stroke();
+
+    signatureStatus.textContent = "Signature drawn.";
+});
+
+signatureCanvas.addEventListener("pointermove", event => {
+    if (!signatureIsDrawing) return;
+
+    event.preventDefault();
+
+    const position = getCanvasPosition(event);
+
+    signatureContext.lineTo(position.x, position.y);
+    signatureContext.stroke();
+});
+
+function stopSignatureDrawing() {
+    signatureIsDrawing = false;
+    signatureContext.beginPath();
+}
+
+signatureCanvas.addEventListener("pointerup", stopSignatureDrawing);
+signatureCanvas.addEventListener("pointercancel", stopSignatureDrawing);
+signatureCanvas.addEventListener("lostpointercapture", stopSignatureDrawing);
+
+clearSignatureBtn.addEventListener("click", () => {
+    signatureContext.clearRect(
+        0, 0, signatureCanvas.width, signatureCanvas.height
+    );
+
+    signatureHasDrawing = false;
+    signatureStatus.textContent = "Drawn signature cleared.";
+});
+
+signatureFile.addEventListener("change", () => {
+    const file = signatureFile.files[0];
+
+    uploadedSignatureData = "";
+    signatureUploadPreview.hidden = true;
+
+    if (!file) return;
+
+    if (!["image/png", "image/jpeg"].includes(file.type)) {
+        alert("Please choose a PNG or JPG image.");
+        signatureFile.value = "";
+        return;
+    }
+
+    if (file.size > 1024 * 1024) {
+        alert("Signature image must be 1 MB or smaller.");
+        signatureFile.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        const image = new Image();
+
+        image.onload = () => {
+            const scale = Math.min(
+                1,
+                1200 / image.naturalWidth,
+                400 / image.naturalHeight
+            );
+
+            const outputCanvas = document.createElement("canvas");
+
+            outputCanvas.width = Math.max(
+                1, Math.round(image.naturalWidth * scale)
+            );
+
+            outputCanvas.height = Math.max(
+                1, Math.round(image.naturalHeight * scale)
+            );
+
+            const outputContext = outputCanvas.getContext("2d");
+
+            outputContext.drawImage(
+                image,
+                0, 0,
+                outputCanvas.width,
+                outputCanvas.height
+            );
+
+            uploadedSignatureData = outputCanvas.toDataURL("image/png");
+
+            signatureUploadPreview.src = uploadedSignatureData;
+            signatureUploadPreview.hidden = false;
+
+            signatureStatus.textContent = "Signature image ready.";
+        };
+
+        image.onerror = () => {
+            alert("Image could not be read. Please choose another image.");
+            signatureFile.value = "";
+        };
+
+        image.src = reader.result;
+    };
+
+    reader.onerror = () => {
+        alert("Could not read the selected file. Please try again.");
+        signatureFile.value = "";
+    };
+
+    reader.readAsDataURL(file);
+});
+
+removeUploadedSignature.addEventListener("click", () => {
+    uploadedSignatureData = "";
+    signatureFile.value = "";
+    signatureUploadPreview.removeAttribute("src");
+    signatureUploadPreview.hidden = true;
+    signatureStatus.textContent = "Uploaded signature removed.";
+});
+
+function getCurrentSignatureData() {
+    if (signatureMode === "draw" && signatureHasDrawing) {
+        return signatureCanvas.toDataURL("image/png");
+    }
+
+    if (signatureMode === "upload") {
+        return uploadedSignatureData;
+    }
+
+    return "";
+}
+
+/* ===================================
+   Customer Signature end
+=================================== */
 
 const eventLocationInput = document.getElementById("commonEventLocation");
 
@@ -426,9 +639,28 @@ bookingForm.addEventListener("submit", async function (e) {
 
 
     }
+    // customer signature start
+
+    
+const signatureData = getCurrentSignatureData();
+
+if (!signatureData) {
+    alert("Please draw or upload your signature before submitting.");
+
+    document.getElementById("signatureSection")
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+
+    return;
+}
+
+
+    // customer signature end
 
     // Frontend preview only. No booking is sent to the backend yet.
-
+    console.log("Signature mode:", signatureMode);
+console.log("Signature data exists:", !!signatureData);
+console.log("Signature data length:", signatureData?.length || 0);
+console.log("Signature consent:", document.getElementById("signatureConsent").checked);
 
     const bookingPreview = {
         requestId: crypto.randomUUID(),
@@ -446,11 +678,14 @@ bookingForm.addEventListener("submit", async function (e) {
             email: guardianEmail.value.trim()
         },
 
-        eventSide: eventSide,
-        eventLocation: eventLocation,
-        events,
-        message: bookingMessage.value.trim()
-    };
+         eventSide: eventSide,
+         eventLocation: eventLocation,
+         events,
+         message: bookingMessage.value.trim(),
+         signature: signatureData,
+         signatureMode: signatureMode,
+         signatureConsent: document.getElementById("signatureConsent").checked
+         };
 
     const submitButton =
         e.submitter || bookingForm.querySelector('[type="submit"]');

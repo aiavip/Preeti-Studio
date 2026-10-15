@@ -295,7 +295,69 @@
         <label for="guardianEmail">Guardian Email (Optional)</label>
         <input type="email" id="guardianEmail" placeholder="guardian@gmail.com">
       </div>
+<!-- adding signature option start -->
+ 
+<div class="booking-divider"></div>
 
+<div id="signatureSection">
+  <h3 class="booking-section-title">4. Customer Signature *</h3>
+
+  <p class="booking-help">
+    Draw your signature on the screen or upload a PNG/JPG image.
+  </p>
+
+  <div class="signature-mode-tabs">
+    <button type="button" id="signatureDrawTab"
+      class="signature-mode-btn active">
+      Draw Signature
+    </button>
+
+    <button type="button" id="signatureUploadTab"
+      class="signature-mode-btn">
+      Upload Signature
+    </button>
+  </div>
+
+  <div id="signatureDrawPanel" class="signature-panel">
+    <canvas id="signatureCanvas"
+      class="signature-canvas"
+      width="900" height="260"
+      aria-label="Draw your signature here"></canvas>
+
+    <button type="button" id="clearSignatureBtn">
+      Clear Signature
+    </button>
+  </div>
+
+  <div id="signatureUploadPanel" class="signature-panel" hidden>
+    <div class="form-group">
+      <label for="signatureFile">
+        Choose Signature Image (PNG/JPG, maximum 1 MB)
+      </label>
+      <input type="file" id="signatureFile"
+        accept="image/png,image/jpeg">
+    </div>
+
+    <img id="signatureUploadPreview"
+      alt="Uploaded signature preview" hidden>
+
+    <button type="button" id="removeUploadedSignature">
+      Remove Uploaded Signature
+    </button>
+  </div>
+
+  <label class="self-check signature-consent">
+    <input type="checkbox" id="signatureConsent" required>
+    <span>
+      I agree to provide this signature to Preeti Studio for my booking
+      records.
+    </span>
+  </label>
+
+  <p id="signatureStatus" class="booking-help" aria-live="polite"></p>
+</div>
+
+ <!-- signature option end -->
       
 <div class="booking-divider"></div>
 
@@ -337,7 +399,6 @@
     </button>
 </div>
 
-<div id="eventList"></div>
 
 
       <div id="eventList"></div>
