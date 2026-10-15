@@ -345,6 +345,19 @@ function displayBookings(bookings) {
         </div>
       </div>
 
+      <div class="booking-signature">
+    <strong>Customer Signature</strong>
+    ${booking.signature
+        ? `<img
+                    src="${booking.signature}"
+                    alt="Customer signature"
+                >`
+        : `<p class="signature-missing">
+                    No signature available for this booking.
+                </p>`
+      }
+</div>
+
       <h4 class="events-heading">Event Schedule & Services</h4>
       <div class="events-list">
         ${eventHTML}
@@ -1013,34 +1026,34 @@ function addEventCard() {
     card.remove();
     updateNewEventNumbers();
   });
-  
-const addInlineEventBtn = card.querySelector(".add-event-inline-btn");
 
-if (addInlineEventBtn) {
-  addInlineEventBtn.addEventListener("click", () => {
-    addBookingError.textContent = "";
-    addEventCard();
+  const addInlineEventBtn = card.querySelector(".add-event-inline-btn");
 
-    const lastEvent = newBookingEvents.lastElementChild;
+  if (addInlineEventBtn) {
+    addInlineEventBtn.addEventListener("click", () => {
+      addBookingError.textContent = "";
+      addEventCard();
 
-    if (lastEvent) {
-      setTimeout(() => {
-        lastEvent.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+      const lastEvent = newBookingEvents.lastElementChild;
 
-        window.scrollBy({
-          top: 180,
-          behavior: "smooth"
-        });
-      }, 100);
-    }
-  });
-}
+      if (lastEvent) {
+        setTimeout(() => {
+          lastEvent.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+
+          window.scrollBy({
+            top: 180,
+            behavior: "smooth"
+          });
+        }, 100);
+      }
+    });
+  }
 
 
-    newBookingEvents.appendChild(card);
+  newBookingEvents.appendChild(card);
   updateNewEventNumbers();
 }
 
