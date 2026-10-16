@@ -1559,3 +1559,52 @@ footer>div>p {
 }
 
 /* style for signature end */
+ 
+/* logo addition start  */
+
+
+/* Logo beside Preeti Studio title */
+.nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.nav .brand-logo {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .nav .brand-logo {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+.nav .brand-logo {
+    display: block;
+    width: 42px;
+    height: 42px;
+    max-width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid #e8b957;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .nav .brand-logo {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+
+/* logo addition end  */
