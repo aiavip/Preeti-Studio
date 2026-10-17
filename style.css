@@ -133,9 +133,20 @@ a {
     display: flex;
     align-items: center;
     padding: 120px 8%;
-    background-image: url("https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=2200&q=90");
-    background-size: cover;
-    background-position: center;
+
+background-image:
+    linear-gradient(
+        90deg,
+        rgba(5, 5, 5, 0.78) 0%,
+        rgba(5, 5, 5, 0.48) 45%,
+        rgba(5, 5, 5, 0.18) 100%
+    ),
+    url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=90");
+
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
 }
 
 .hero-overlay {
