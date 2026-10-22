@@ -838,6 +838,151 @@ const addGuardianEmail = document.getElementById("addGuardianEmail");
 
 const addBookingMessage = document.getElementById("addBookingMessage");
 
+// ===============================
+// Admin Booking Email OTP
+// ===============================
+
+const adminSendOtpBtn =
+  document.getElementById("adminSendOtpBtn");
+
+const adminEmailOtp =
+  document.getElementById("adminEmailOtp");
+
+const adminVerifyOtpBtn =
+  document.getElementById("adminVerifyOtpBtn");
+
+const adminEmailOtpStatus =
+  document.getElementById("adminEmailOtpStatus");
+
+let adminEmailVerificationToken = "";
+let adminVerifiedEmail = "";
+
+
+let adminOtpTargetEmail = "";
+
+// Reset verification when the email address changes
+function resetAdminEmailVerification() {
+  const currentEmail = addPersonEmail.value.trim().toLowerCase();
+
+  if (
+    currentEmail !== adminOtpTargetEmail &&
+    (adminOtpTargetEmail || adminEmailVerificationToken)
+  ) {
+    adminEmailVerificationToken = "";
+    adminVerifiedEmail = "";
+    adminOtpTargetEmail = "";
+    adminEmailOtp.value = "";
+    adminEmailOtpStatus.textContent =
+      "Email changed. Please verify the new email address.";
+  }
+}
+
+addPersonEmail.addEventListener("input", resetAdminEmailVerification);
+
+
+// Send OTP
+adminSendOtpBtn.addEventListener("click", async () => {
+  const email = addPersonEmail.value.trim().toLowerCase();
+
+  if (!email || !addPersonEmail.checkValidity()) {
+    adminEmailOtpStatus.textContent =
+      "Please enter a valid booking person email first.";
+    addPersonEmail.focus();
+    return;
+  }
+
+  adminSendOtpBtn.disabled = true;
+  adminEmailOtpStatus.textContent = "Sending OTP...";
+
+  try {
+    // A fresh OTP requires fresh verification.
+    adminEmailVerificationToken = "";
+    adminVerifiedEmail = "";
+    adminOtpTargetEmail = email;
+    adminEmailOtp.value = "";
+
+    const response = await fetch(`${API_URL}/api/email-otp/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      adminOtpTargetEmail = "";
+      throw new Error(data.message || "Could not send OTP.");
+    }
+
+    adminEmailOtpStatus.textContent =
+      "OTP sent. Please check the booking person's email inbox.";
+    adminEmailOtp.focus();
+
+  } catch (error) {
+    adminEmailOtpStatus.textContent =
+      error.message || "Unable to send OTP.";
+  } finally {
+    adminSendOtpBtn.disabled = false;
+  }
+});
+
+
+// Verify OTP
+adminVerifyOtpBtn.addEventListener("click", async () => {
+  const email = addPersonEmail.value.trim().toLowerCase();
+  const otp = adminEmailOtp.value.trim();
+
+  if (!email || email !== adminOtpTargetEmail) {
+    adminEmailOtpStatus.textContent =
+      "Please send an OTP to the current email address first.";
+    return;
+  }
+
+  if (!/^\d{6}$/.test(otp)) {
+    adminEmailOtpStatus.textContent =
+      "Please enter the 6-digit OTP.";
+    adminEmailOtp.focus();
+    return;
+  }
+
+  adminVerifyOtpBtn.disabled = true;
+  adminEmailOtpStatus.textContent = "Verifying OTP...";
+
+  try {
+    const response = await fetch(`${API_URL}/api/email-otp/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, otp })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success || !data.verificationToken) {
+      throw new Error(data.message || "OTP verification failed.");
+    }
+
+    adminEmailVerificationToken = data.verificationToken;
+    adminVerifiedEmail = email;
+
+    adminEmailOtpStatus.textContent =
+      "Email verified successfully.";
+
+  } catch (error) {
+    adminEmailVerificationToken = "";
+    adminVerifiedEmail = "";
+
+    adminEmailOtpStatus.textContent =
+      error.message || "OTP verification failed.";
+  } finally {
+    adminVerifyOtpBtn.disabled = false;
+  }
+});
+
+
 const availableEventTypes = [
   "Engagement",
   "Tilak/Chheka",
@@ -858,6 +1003,215 @@ const availableServices = [
   "Album & Pendrive"
 
 ];
+// ===============================
+// Admin Add Booking Signature
+// ===============================
+
+const adminSignatureCanvas =
+  document.getElementById("adminSignatureCanvas");
+
+const adminSignatureCtx =
+  adminSignatureCanvas.getContext("2d");
+
+const signatureUpload =
+  document.getElementById("signatureUpload");
+
+const clearSignatureBtn =
+  document.getElementById("clearSignature");
+
+const signatureDrawTab =
+  document.getElementById("signatureDrawTab");
+
+const adminSignatureConsent =
+  document.getElementById("adminSignatureConsent");
+
+const signatureStatus =
+  document.getElementById("signatureStatus");
+
+let adminSignatureData = "";
+let adminSignatureMode = "draw";
+let signatureDrawing = false;
+let signatureHasDrawing = false;
+
+function clearAdminSignature() {
+  adminSignatureCtx.clearRect(
+    0,
+    0,
+    adminSignatureCanvas.width,
+    adminSignatureCanvas.height
+  );
+
+  adminSignatureData = "";
+  adminSignatureMode = "draw";
+  signatureHasDrawing = false;
+  signatureUpload.value = "";
+
+  signatureStatus.textContent =
+    "Customer/guardian se yahan signature karwayein.";
+}
+
+function getSignaturePosition(event) {
+  const rect = adminSignatureCanvas.getBoundingClientRect();
+
+  return {
+    x: (event.clientX - rect.left) *
+      adminSignatureCanvas.width / rect.width,
+
+    y: (event.clientY - rect.top) *
+      adminSignatureCanvas.height / rect.height
+  };
+}
+
+adminSignatureCanvas.addEventListener("pointerdown", (event) => {
+  if (adminSignatureMode !== "draw") return;
+
+  event.preventDefault();
+
+  signatureDrawing = true;
+  adminSignatureCanvas.setPointerCapture(event.pointerId);
+
+  const pos = getSignaturePosition(event);
+
+  adminSignatureCtx.beginPath();
+  adminSignatureCtx.moveTo(pos.x, pos.y);
+  adminSignatureCtx.lineWidth = 4;
+  adminSignatureCtx.lineCap = "round";
+  adminSignatureCtx.lineJoin = "round";
+  adminSignatureCtx.strokeStyle = "#111";
+
+  adminSignatureCtx.lineTo(pos.x + 0.1, pos.y + 0.1);
+  adminSignatureCtx.stroke();
+
+  signatureHasDrawing = true;
+});
+
+adminSignatureCanvas.addEventListener("pointermove", (event) => {
+  if (!signatureDrawing || adminSignatureMode !== "draw") return;
+
+  event.preventDefault();
+
+  const pos = getSignaturePosition(event);
+
+  adminSignatureCtx.lineTo(pos.x, pos.y);
+  adminSignatureCtx.stroke();
+});
+
+function finishAdminSignature() {
+  if (!signatureDrawing) return;
+
+  signatureDrawing = false;
+
+  if (signatureHasDrawing) {
+    adminSignatureData =
+      adminSignatureCanvas.toDataURL("image/png");
+
+    adminSignatureMode = "draw";
+
+    signatureStatus.textContent = "Signature ready.";
+  }
+}
+
+adminSignatureCanvas.addEventListener(
+  "pointerup",
+  finishAdminSignature
+);
+
+adminSignatureCanvas.addEventListener(
+  "pointercancel",
+  finishAdminSignature
+);
+
+adminSignatureCanvas.addEventListener(
+  "lostpointercapture",
+  finishAdminSignature
+);
+
+clearSignatureBtn.addEventListener("click", () => {
+  clearAdminSignature();
+});
+
+signatureDrawTab.addEventListener("click", () => {
+  clearAdminSignature();
+});
+
+
+signatureUpload.addEventListener("change", () => {
+  const file = signatureUpload.files[0];
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+    alert("Please upload a PNG, JPG, JPEG or WEBP image up to 5 MB.");
+    signatureUpload.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const image = new Image();
+
+    image.onload = () => {
+      clearAdminSignature();
+
+      adminSignatureCtx.fillStyle = "#fff";
+      adminSignatureCtx.fillRect(
+        0,
+        0,
+        adminSignatureCanvas.width,
+        adminSignatureCanvas.height
+      );
+
+      const scale = Math.min(
+        (adminSignatureCanvas.width - 30) / image.width,
+        (adminSignatureCanvas.height - 30) / image.height
+      );
+
+      const width = image.width * scale;
+      const height = image.height * scale;
+
+      adminSignatureCtx.drawImage(
+        image,
+        (adminSignatureCanvas.width - width) / 2,
+        (adminSignatureCanvas.height - height) / 2,
+        width,
+        height
+      );
+
+      // Convert every accepted format to PNG for the existing backend.
+      adminSignatureData =
+        adminSignatureCanvas.toDataURL("image/png");
+
+      adminSignatureMode = "upload";
+      signatureHasDrawing = true;
+
+      signatureStatus.textContent =
+        "Signature image uploaded successfully.";
+    };
+
+    image.onerror = () => {
+      clearAdminSignature();
+      signatureUpload.value = "";
+      alert("The selected image could not be loaded.");
+    };
+
+    image.src = reader.result;
+  };
+
+  reader.onerror = () => {
+    signatureUpload.value = "";
+    alert("Could not read the selected file.");
+  };
+
+  reader.readAsDataURL(file);
+});
+
 
 let newEventCounter = 0;
 
@@ -868,8 +1222,21 @@ function openAddBookingModal() {
   }
 
   addBookingForm.reset();
+  adminEmailVerificationToken = "";
+  adminVerifiedEmail = "";
+  adminOtpTargetEmail = "";
+
+  if (adminEmailOtp) {
+    adminEmailOtp.value = "";
+  }
+
+  if (adminEmailOtpStatus) {
+    adminEmailOtpStatus.textContent = "";
+  }
   newBookingEvents.innerHTML = "";
   addBookingError.textContent = "";
+  clearAdminSignature();
+  adminSignatureConsent.checked = false;
   saveAddBookingBtn.disabled = false;
   saveAddBookingBtn.textContent = "Save Booking";
   addGuardianIsSelf.checked = true;
@@ -1164,6 +1531,18 @@ addBookingForm.addEventListener("submit", async (event) => {
   const guardianName = addGuardianName.value.trim();
   const guardianPhone = addGuardianPhone.value.trim();
   const guardianEmail = addGuardianEmail.value.trim();
+  
+  // Verify booking person's email before saving
+  if (
+    !adminEmailVerificationToken ||
+    !adminVerifiedEmail ||
+    adminVerifiedEmail !== personEmail.toLowerCase() ||
+    adminOtpTargetEmail !== personEmail.toLowerCase()
+  ) {
+    addBookingError.textContent =
+      "Please verify the booking person's email before saving.";
+    return;
+  }
 
   if (
     !personName ||
@@ -1188,6 +1567,19 @@ addBookingForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  // Validate customer/guardian signature
+  if (!adminSignatureData) {
+    addBookingError.textContent =
+      "Please take the customer/guardian signature first.";
+    return;
+  }
+
+  if (!adminSignatureConsent.checked) {
+    addBookingError.textContent =
+      "Please confirm customer/guardian consent.";
+    return;
+  }
+
   const requestId =
     `PS-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 
@@ -1207,20 +1599,27 @@ addBookingForm.addEventListener("submit", async (event) => {
     eventSide: addEventSide.value,
     eventLocation: addEventLocation.value.trim(),
     events,
-    message: addBookingMessage.value.trim()
+    message: addBookingMessage.value.trim(),
+    signature: adminSignatureData,
+    signatureMode: adminSignatureMode,
+    signatureConsent: adminSignatureConsent.checked,
+    emailVerificationToken: adminEmailVerificationToken
   };
 
   saveAddBookingBtn.disabled = true;
   saveAddBookingBtn.textContent = "Saving...";
 
   try {
-    const response = await fetch(`${API_URL}/api/bookings`, {
+
+    const response = await fetch(`${API_URL}/api/admin/bookings`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-admin-password": currentPassword
       },
       body: JSON.stringify(payload)
     });
+
 
     const responseText = await response.text();
     let data;

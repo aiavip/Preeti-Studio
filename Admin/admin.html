@@ -171,106 +171,161 @@
         </div>
 
       </section>
-      
-<!-- ADD BOOKING MODAL -->
-<div id="addBookingModal" class="booking-modal" hidden>
-  <section class="booking-modal-card">
-    <div class="booking-modal-header">
-      <h2>Add New Booking</h2>
-      <button type="button" id="closeBookingModal" class="modal-close-btn"
-        aria-label="Close">×</button>
-    </div>
 
-    <p class="booking-modal-note">
-      Enter the booking details and add one or more events.
-    </p>
+      <!-- ADD BOOKING MODAL -->
+      <div id="addBookingModal" class="booking-modal" hidden>
+        <section class="booking-modal-card">
+          <div class="booking-modal-header">
+            <h2>Add New Booking</h2>
+            <button type="button" id="closeBookingModal" class="modal-close-btn" aria-label="Close">×</button>
+          </div>
 
-    <form id="addBookingForm">
-      <h3 class="form-section-title">Booking Person</h3>
+          <p class="booking-modal-note">
+            Enter the booking details and add one or more events.
+          </p>
 
-      <div class="add-form-grid">
-        <div class="add-form-field">
-          <label for="addPersonName">Full Name *</label>
-          <input id="addPersonName" name="personName" required maxlength="100">
-        </div>
+          <form id="addBookingForm">
+            <h3 class="form-section-title">Booking Person</h3>
 
-        <div class="add-form-field">
-          <label for="addPersonPhone">Phone Number *</label>
-          <input id="addPersonPhone" name="personPhone" type="tel"
-            required maxlength="20">
-        </div>
+            <div class="add-form-grid">
+              <div class="add-form-field">
+                <label for="addPersonName">Full Name *</label>
+                <input id="addPersonName" name="personName" required maxlength="100">
+              </div>
 
-        <div class="add-form-field">
-          <label for="addPersonEmail">Email *</label>
-          <input id="addPersonEmail" name="personEmail" type="email" required>
-        </div>
+              <div class="add-form-field">
+                <label for="addPersonPhone">Phone Number *</label>
+                <input id="addPersonPhone" name="personPhone" type="tel" required maxlength="20">
+              </div>
 
-        <div class="add-form-field">
-          <label for="addEventSide">Event Side *</label>
-          <select id="addEventSide" name="eventSide" required>
-            <option value="">Select side</option>
-            <option value="Bride (Girls)">Bride (Girls)</option>
-            <option value="Groom (Boys)">Groom (Boys)</option>
-          </select>
-        </div>
+              <div class="add-form-field">
+                <label for="addPersonEmail">Email *</label>
+                <input id="addPersonEmail" name="personEmail" type="email" required>
+              </div>
 
-        <div class="add-form-field full-width">
-          <label for="addEventLocation">Event Location *</label>
-          <input id="addEventLocation" name="eventLocation" required maxlength="250">
-        </div>
+              <div class="add-form-field full-width" id="adminEmailOtpSection">
+                <button type="button" id="adminSendOtpBtn" class="add-event-btn">
+                  Send Email OTP
+                </button>
+
+                <label for="adminEmailOtp">Email Verification OTP *</label>
+                <div class="email-otp-row">
+                  <input id="adminEmailOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+                    placeholder="Enter 6-digit OTP">
+
+                  <button type="button" id="adminVerifyOtpBtn" class="add-event-btn">
+                    Verify OTP
+                  </button>
+                </div>
+
+                <p id="adminEmailOtpStatus" role="status" aria-live="polite"></p>
+              </div>
+
+
+              <div class="add-form-field">
+                <label for="addEventSide">Event Side *</label>
+                <select id="addEventSide" name="eventSide" required>
+                  <option value="">Select side</option>
+                  <option value="Bride (Girls)">Bride (Girls)</option>
+                  <option value="Groom (Boys)">Groom (Boys)</option>
+                </select>
+              </div>
+
+              <div class="add-form-field full-width">
+                <label for="addEventLocation">Event Location *</label>
+                <input id="addEventLocation" name="eventLocation" required maxlength="250">
+              </div>
+            </div>
+
+            <h3 class="form-section-title">Guardian Details</h3>
+
+            <label class="guardian-self-option">
+              <input type="checkbox" id="addGuardianIsSelf" checked>
+              Guardian is the booking person
+            </label>
+
+            <div class="add-form-grid">
+              <div class="add-form-field">
+                <label for="addGuardianName">Guardian Name *</label>
+                <input id="addGuardianName" required maxlength="100">
+              </div>
+
+              <div class="add-form-field">
+                <label for="addGuardianPhone">Guardian Phone *</label>
+                <input id="addGuardianPhone" type="tel" required maxlength="20">
+              </div>
+
+              <div class="add-form-field full-width">
+                <label for="addGuardianEmail">Guardian Email</label>
+                <input id="addGuardianEmail" type="email">
+              </div>
+            </div>
+
+            <div class="events-form-heading">
+              <h3 class="form-section-title">Events</h3>
+              <button type="button" id="addAnotherEventBtn" class="add-event-btn">
+                + Add Another Event
+              </button>
+            </div>
+
+            <div id="newBookingEvents"></div>
+
+
+            <!-- Customer / Guardian Signature -->
+            <div class="add-form-field signature-field">
+              <label>Customer / Guardian Signature *</label>
+
+              <div class="admin-signature-box">
+                <div class="signature-toolbar">
+                  <button type="button" id="signatureDrawTab">
+                    Draw Signature
+                  </button>
+
+                  <label class="signature-upload-label">
+                    Upload file
+                    <input type="file" id="signatureUpload"
+                      accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden>
+                  </label>
+
+                  <button type="button" id="clearSignature">
+                    Clear
+                  </button>
+                </div>
+
+                <canvas id="adminSignatureCanvas" width="900" height="220"
+                  aria-label="Customer or guardian signature area"></canvas>
+
+                <p id="signatureStatus">
+                  Customer/guardian se yahan signature karwayein.
+                </p>
+              </div>
+
+              <label class="signature-consent">
+                <input type="checkbox" id="adminSignatureConsent">
+                Customer/guardian ne signature dene aur booking record mein
+                ise save karne ki consent di hai.
+              </label>
+            </div>
+
+
+            <div class="add-form-field full-width">
+              <label for="addBookingMessage">Message (Optional)</label>
+              <textarea id="addBookingMessage" rows="3" maxlength="2000"></textarea>
+            </div>
+
+            <p id="addBookingError" class="error-message" role="alert"></p>
+
+            <div class="booking-form-actions">
+              <button type="button" id="cancelAddBooking" class="modal-cancel-btn">
+                Cancel
+              </button>
+              <button type="submit" id="saveAddBookingBtn" class="modal-save-btn">
+                Save Booking
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
-
-      <h3 class="form-section-title">Guardian Details</h3>
-
-      <label class="guardian-self-option">
-        <input type="checkbox" id="addGuardianIsSelf" checked>
-        Guardian is the booking person
-      </label>
-
-      <div class="add-form-grid">
-        <div class="add-form-field">
-          <label for="addGuardianName">Guardian Name *</label>
-          <input id="addGuardianName" required maxlength="100">
-        </div>
-
-        <div class="add-form-field">
-          <label for="addGuardianPhone">Guardian Phone *</label>
-          <input id="addGuardianPhone" type="tel" required maxlength="20">
-        </div>
-
-        <div class="add-form-field full-width">
-          <label for="addGuardianEmail">Guardian Email</label>
-          <input id="addGuardianEmail" type="email">
-        </div>
-      </div>
-
-      <div class="events-form-heading">
-        <h3 class="form-section-title">Events</h3>
-        <button type="button" id="addAnotherEventBtn" class="add-event-btn">
-          + Add Another Event
-        </button>
-      </div>
-
-      <div id="newBookingEvents"></div>
-
-      <div class="add-form-field full-width">
-        <label for="addBookingMessage">Message (Optional)</label>
-        <textarea id="addBookingMessage" rows="3" maxlength="2000"></textarea>
-      </div>
-
-      <p id="addBookingError" class="error-message" role="alert"></p>
-
-      <div class="booking-form-actions">
-        <button type="button" id="cancelAddBooking" class="modal-cancel-btn">
-          Cancel
-        </button>
-        <button type="submit" id="saveAddBookingBtn" class="modal-save-btn">
-          Save Booking
-        </button>
-      </div>
-    </form>
-  </section>
-</div>
 
 
     </section>

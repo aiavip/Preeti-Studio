@@ -1603,3 +1603,90 @@ input {
 }
 
 
+/* Admin Add Booking Signature */
+.admin-signature-box {
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #151515;
+}
+
+.signature-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.signature-toolbar button,
+.signature-upload-label {
+    padding: 7px 12px;
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--gold);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+#adminSignatureCanvas {
+    display: block;
+    width: 100%;
+    height: 150px;
+    border-radius: 6px;
+    background: #fff;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+#signatureStatus {
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+/* .signature-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.signature-consent input {
+    margin-top: 4px;
+    flex-shrink: 0;
+} */
+
+/* Fix: Admin booking signature consent checkbox */
+.signature-consent {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 10px;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: left;
+    cursor: pointer;
+}
+
+.signature-consent input[type="checkbox"] {
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+    display: inline-block !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    margin: 2px 0 0 !important;
+    padding: 0 !important;
+    flex: 0 0 16px !important;
+    cursor: pointer;
+}
