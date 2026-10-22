@@ -38,12 +38,25 @@ const bookingDateFilter =
 const bookingDateDisplay =
   document.getElementById("bookingDateDisplay");
 
+
 const clearFiltersBtn =
   document.getElementById("clearFiltersBtn");
 const deleteModeBtn =
   document.getElementById("deleteModeBtn");
+const selectAllBookingsBtn =
+  document.getElementById("selectAllBookingsBtn");
+  
+const bookingSelectionActions =
+  document.getElementById("bookingSelectionActions");
+const cancelSelectionBtn =
+  document.getElementById("cancelSelectionBtn");
+const selectedBookingsCount =
+  document.getElementById("selectedBookingsCount");
+
+
 let deleteMode = false;
 let selectedBookings = new Set();
+
 // const dateFilterText =
 //   document.getElementById("dateFilterText");
 
@@ -263,13 +276,42 @@ function displayBookings(bookings) {
         </p>
       `;
 
+          // Compact event summary for the default booking view
+    const eventSummaryHTML = events.length
+      ? events.map((event) => `
+          <span class="booking-event-summary-item">
+            <strong>${escapeHTML(event.type || "N/A")}</strong>
+            — ${escapeHTML(event.date || "Date not available")}
+          </span>
+        `).join("")
+      : `<span class="booking-event-summary-item">
+           Event details not available
+         </span>`;
+
     const guardian = booking.guardian || {};
     const bookingPerson = booking.bookingPerson || {};
 
     bookingCard.innerHTML = `
       ${checkboxHTML}
 
-      <h3>${escapeHTML(booking.name || bookingPerson.name || "Unknown Client")}</h3>
+            <h3>${escapeHTML(booking.name || bookingPerson.name || "Unknown Client")}</h3>
+
+      <!-- Always visible: compact event summary -->
+      <div class="booking-event-summary">
+        ${eventSummaryHTML}
+      </div>
+
+      <!-- See More / See Less toggle -->
+      <button
+        type="button"
+        class="toggle-booking-details-btn"
+        aria-expanded="false"
+      >
+        See More ↓
+      </button>
+
+      <!-- All remaining details stay collapsed by default -->
+      <div class="booking-extra-details" hidden>
 
       <div class="booking-info">
       
@@ -363,14 +405,40 @@ function displayBookings(bookings) {
         ${eventHTML}
       </div>
 
-      <button
+            <button
         type="button"
         class="delete-booking-btn"
         data-id="${escapeHTML(booking._id || "")}"
       >Delete Booking</button>
+
+      </div>
+      <!-- End booking-extra-details -->
     `;
 
     bookingsContainer.appendChild(bookingCard);
+        // Toggle details for this booking only
+    const toggleDetailsBtn = bookingCard.querySelector(
+      ".toggle-booking-details-btn"
+    );
+
+    const extraDetails = bookingCard.querySelector(
+      ".booking-extra-details"
+    );
+
+    toggleDetailsBtn.addEventListener("click", () => {
+      const isExpanded = !extraDetails.hidden;
+
+      extraDetails.hidden = isExpanded;
+
+      toggleDetailsBtn.textContent = isExpanded
+        ? "See More ↓"
+        : "See Less ↑";
+
+      toggleDetailsBtn.setAttribute(
+        "aria-expanded",
+        String(!isExpanded)
+      );
+    });
 
     const copyIdBtn = bookingCard.querySelector(".copy-request-id-btn");
 
@@ -639,6 +707,8 @@ function escapeHTML(value) {
 // UPDATE DELETE BUTTON
 // =========================
 
+
+
 function updateDeleteButton() {
   const count = selectedBookings.size;
 
@@ -650,7 +720,32 @@ function updateDeleteButton() {
   } else {
     deleteModeBtn.textContent = "Delete Booking";
   }
+
+  if (bookingSelectionActions) {
+    bookingSelectionActions.hidden = !deleteMode;
+  }
+
+  if (selectedBookingsCount) {
+    selectedBookingsCount.textContent =
+      `${count} selected`;
+  }
+
+  if (selectAllBookingsBtn) {
+    const visibleBookings = getFilteredBookings();
+
+    const allSelected =
+      visibleBookings.length > 0 &&
+      visibleBookings.every(booking =>
+        selectedBookings.has(booking._id)
+      );
+
+    selectAllBookingsBtn.textContent = allSelected
+      ? "Deselect All"
+      : "Select All";
+  }
 }
+
+
 
 
 // =========================
@@ -716,6 +811,42 @@ function getFilteredBookings() {
 // BULK DELETE MODE
 // =========================
 
+
+cancelSelectionBtn.addEventListener("click", () => {
+  deleteMode = false;
+  selectedBookings.clear();
+
+  displayBookings(getFilteredBookings());
+  updateDeleteButton();
+});
+
+
+selectAllBookingsBtn.addEventListener("click", () => {
+  if (!deleteMode) return;
+
+  const visibleBookings = getFilteredBookings();
+
+  if (visibleBookings.length === 0) return;
+
+  const allSelected = visibleBookings.every(booking =>
+    selectedBookings.has(booking._id)
+  );
+
+  if (allSelected) {
+    visibleBookings.forEach(booking => {
+      selectedBookings.delete(booking._id);
+    });
+  } else {
+    visibleBookings.forEach(booking => {
+      selectedBookings.add(booking._id);
+    });
+  }
+
+  displayBookings(getFilteredBookings());
+  updateDeleteButton();
+});
+
+
 deleteModeBtn.addEventListener("click", async () => {
   if (!deleteMode) {
     deleteMode = true;
@@ -725,13 +856,13 @@ deleteModeBtn.addEventListener("click", async () => {
     return;
   }
 
-  if (selectedBookings.size === 0) {
-    deleteMode = false;
-    selectedBookings.clear();
-    displayBookings(getFilteredBookings());
-    updateDeleteButton();
-    return;
-  }
+  // if (selectedBookings.size === 0) {
+  //   deleteMode = false;
+  //   selectedBookings.clear();
+  //   displayBookings(getFilteredBookings());
+  //   updateDeleteButton();
+  //   return;
+  // }
 
   const bookingIds = [...selectedBookings];
 
@@ -793,6 +924,7 @@ deleteModeBtn.addEventListener("click", async () => {
     updateDeleteButton();
   }
 });
+
 
 // =========================
 // DATE PICKER OPEN

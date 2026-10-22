@@ -1690,3 +1690,154 @@ input {
     flex: 0 0 16px !important;
     cursor: pointer;
 }
+/* date 22-10-2026 ka changes */
+
+/* Select All Bookings Button */
+.select-all-btn {
+  padding: 10px 16px;
+  border: 1px solid #e8b957;
+  border-radius: 8px;
+  background: transparent;
+  color: #e8b957;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.select-all-btn:hover {
+  background: #e8b957;
+  color: #0b0b0b;
+}
+
+.select-all-btn[hidden] {
+  display: none !important;
+}
+
+/* Booking Selection Actions */
+.booking-selection-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.booking-selection-actions[hidden] {
+  display: none !important;
+}
+
+/* Cross Button */
+.cancel-selection-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(232, 185, 87, 0.5);
+  border-radius: 8px;
+  background: transparent;
+  color: #e8b957;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-selection-btn:hover {
+  background: #e8b957;
+  color: #0b0b0b;
+}
+
+.selected-bookings-count {
+  margin-left: auto;
+  color: #bdbdbd;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .booking-selection-actions {
+    gap: 8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cancel-selection-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .selected-bookings-count {
+    font-size: 13px;
+  }
+}
+
+
+/* Keep selection buttons visible while scrolling */
+.booking-selection-actions {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--black);
+  padding: 10px 0;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* Mobile selection controls */
+@media (max-width: 700px) {
+  .booking-selection-actions {
+    top: 0;
+    padding: 10px 0;
+    gap: 8px;
+  }
+
+  .cancel-selection-btn {
+    flex: 0 0 38px;
+  }
+
+  .select-all-btn {
+    min-height: 38px;
+  }
+}
+
+/* Compact event summary in booking cards */
+.booking-event-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 8px 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.booking-event-summary-item {
+  font-size: 14px;
+  color: var(--white, #ffffff);
+}
+
+/* See More / See Less button */
+.toggle-booking-details-btn {
+  display: inline-block;
+  margin: 4px 0 12px;
+  padding: 6px 0;
+  border: none;
+  background: transparent;
+  color: var(--gold, #e8b957);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle-booking-details-btn:hover {
+  color: var(--gold-light, #f4d27a);
+  text-decoration: underline;
+}
+
+/* Respect the hidden attribute */
+.booking-extra-details[hidden] {
+  display: none !important;
+}
