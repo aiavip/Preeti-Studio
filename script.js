@@ -536,8 +536,148 @@ guardianIsSelf.checked = true;
 createEventCard();
 syncGuardianDetails();
 
+
+/* ===============================
+   EMAIL OTP VERIFICATION
+================================ */
+
+let emailVerificationToken = "";
+let verifiedEmailAddress = "";
+
+const bookingEmailInput = document.getElementById("bookingEmail");
+const sendEmailOtpButton = document.getElementById("sendEmailOtp");
+const emailOtpSection = document.getElementById("emailOtpSection");
+const emailOtpInput = document.getElementById("emailOtp");
+const verifyEmailOtpButton = document.getElementById("verifyEmailOtp");
+const emailOtpMessage = document.getElementById("emailOtpMessage");
+
+const OTP_API_URL = "http://localhost:3000";
+
+function showEmailOtpMessage(message, success = false) {
+    emailOtpMessage.textContent = message;
+    emailOtpMessage.style.color = success ? "green" : "crimson";
+}
+
+// SEND OTP
+sendEmailOtpButton.addEventListener("click", async () => {
+    const email = bookingEmailInput.value.trim().toLowerCase();
+
+    if (!bookingEmailInput.checkValidity() || !email) {
+        bookingEmailInput.reportValidity();
+        return;
+    }
+
+    sendEmailOtpButton.disabled = true;
+    sendEmailOtpButton.textContent = "Sending...";
+
+    try {
+        const response = await fetch(`${OTP_API_URL}/api/email-otp/send`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Could not send OTP.");
+        }
+
+        emailOtpSection.hidden = false;
+        emailOtpInput.required = true;
+        showEmailOtpMessage("OTP sent! Please check your email.", true);
+        emailOtpInput.focus();
+
+    } catch (error) {
+        showEmailOtpMessage(
+            error.message || "Could not connect to the local backend."
+        );
+    } finally {
+        sendEmailOtpButton.disabled = false;
+        sendEmailOtpButton.textContent = "Send OTP";
+    }
+});
+
+// VERIFY OTP
+verifyEmailOtpButton.addEventListener("click", async () => {
+    const email = bookingEmailInput.value.trim().toLowerCase();
+    const otp = emailOtpInput.value.trim();
+
+    if (!/^\d{6}$/.test(otp)) {
+        showEmailOtpMessage("Please enter the 6-digit OTP.");
+        emailOtpInput.focus();
+        return;
+    }
+
+    verifyEmailOtpButton.disabled = true;
+    verifyEmailOtpButton.textContent = "Verifying...";
+
+    try {
+        const response = await fetch(`${OTP_API_URL}/api/email-otp/verify`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, otp })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "OTP verification failed.");
+        }
+
+        emailVerificationToken = result.verificationToken;
+        verifiedEmailAddress = email;
+
+        showEmailOtpMessage("Email verified successfully!", true);
+        bookingEmailInput.readOnly = true;
+        sendEmailOtpButton.hidden = true;
+        emailOtpInput.disabled = true;
+        verifyEmailOtpButton.hidden = true;
+
+    } catch (error) {
+        showEmailOtpMessage(error.message || "OTP verification failed.");
+    } finally {
+        verifyEmailOtpButton.disabled = false;
+        verifyEmailOtpButton.textContent = "Verify Email";
+    }
+});
+
+// If the email changes, verification must be repeated.
+bookingEmailInput.addEventListener("input", () => {
+    if (
+        verifiedEmailAddress &&
+        bookingEmailInput.value.trim().toLowerCase() !== verifiedEmailAddress
+    ) {
+        emailVerificationToken = "";
+        verifiedEmailAddress = "";
+
+        bookingEmailInput.readOnly = false;
+        sendEmailOtpButton.hidden = false;
+        emailOtpSection.hidden = true;
+        emailOtpInput.value = "";
+        emailOtpInput.disabled = false;
+        emailOtpInput.required = false;
+        verifyEmailOtpButton.hidden = false;
+        showEmailOtpMessage("Email changed. Please verify it again.");
+    }
+});
+
+
 bookingForm.addEventListener("submit", async function (e) {
     e.preventDefault();
+    if (
+        !emailVerificationToken ||
+        verifiedEmailAddress !== bookingEmailInput.value.trim().toLowerCase()
+    ) {
+        alert("Please verify your email before submitting the booking.");
+        bookingEmailInput.focus();
+        return;
+    }
+
 
     syncGuardianDetails();
 
@@ -641,26 +781,26 @@ bookingForm.addEventListener("submit", async function (e) {
     }
     // customer signature start
 
-    
-const signatureData = getCurrentSignatureData();
 
-if (!signatureData) {
-    alert("Please draw or upload your signature before submitting.");
+    const signatureData = getCurrentSignatureData();
 
-    document.getElementById("signatureSection")
-        .scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!signatureData) {
+        alert("Please draw or upload your signature before submitting.");
 
-    return;
-}
+        document.getElementById("signatureSection")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+
+        return;
+    }
 
 
     // customer signature end
 
     // Frontend preview only. No booking is sent to the backend yet.
     console.log("Signature mode:", signatureMode);
-console.log("Signature data exists:", !!signatureData);
-console.log("Signature data length:", signatureData?.length || 0);
-console.log("Signature consent:", document.getElementById("signatureConsent").checked);
+    console.log("Signature data exists:", !!signatureData);
+    console.log("Signature data length:", signatureData?.length || 0);
+    console.log("Signature consent:", document.getElementById("signatureConsent").checked);
 
     const bookingPreview = {
         requestId: crypto.randomUUID(),
@@ -670,6 +810,7 @@ console.log("Signature consent:", document.getElementById("signatureConsent").ch
             phone: bookingPhone.value.trim(),
             email: bookingEmail.value.trim()
         },
+        emailVerificationToken: emailVerificationToken,
 
         guardian: {
             isSelf: guardianIsSelf.checked,
@@ -678,14 +819,14 @@ console.log("Signature consent:", document.getElementById("signatureConsent").ch
             email: guardianEmail.value.trim()
         },
 
-         eventSide: eventSide,
-         eventLocation: eventLocation,
-         events,
-         message: bookingMessage.value.trim(),
-         signature: signatureData,
-         signatureMode: signatureMode,
-         signatureConsent: document.getElementById("signatureConsent").checked
-         };
+        eventSide: eventSide,
+        eventLocation: eventLocation,
+        events,
+        message: bookingMessage.value.trim(),
+        signature: signatureData,
+        signatureMode: signatureMode,
+        signatureConsent: document.getElementById("signatureConsent").checked
+    };
 
     const submitButton =
         e.submitter || bookingForm.querySelector('[type="submit"]');
@@ -728,6 +869,72 @@ console.log("Signature consent:", document.getElementById("signatureConsent").ch
         );
 
         console.log("Booking API response:", result);
+        
+        // Reset booking form after successful submission
+        bookingForm.reset();
+        
+        
+    // Reset signature state
+    signatureHasDrawing = false;
+    uploadedSignatureData = "";
+    signatureMode = "draw";
+
+    // Clear signature canvas
+    const ctx = signatureCanvas.getContext("2d");
+    ctx.clearRect(
+        0,
+        0,
+        signatureCanvas.width,
+        signatureCanvas.height
+    );
+
+    // Reset signature upload input and preview
+    document.getElementById("signatureFile").value = "";
+
+    const signaturePreview = document.getElementById("signatureUploadPreview");
+    signaturePreview.src = "";
+    signaturePreview.hidden = true;
+
+    // Switch back to Draw Signature tab
+    document.getElementById("signatureDrawPanel").hidden = false;
+    document.getElementById("signatureUploadPanel").hidden = true;
+
+    document.getElementById("signatureDrawTab").classList.add("active");
+    document.getElementById("signatureUploadTab").classList.remove("active");
+
+    // Reset signature status and consent
+    document.getElementById("signatureStatus").textContent = "";
+    document.getElementById("signatureConsent").checked = false;
+
+
+        // Reset email verification
+        emailVerificationToken = "";
+        verifiedEmailAddress = "";
+
+        bookingEmailInput.readOnly = false;
+        sendEmailOtpButton.hidden = false;
+        emailOtpSection.hidden = true;
+        emailOtpInput.value = "";
+        emailOtpInput.disabled = false;
+        emailOtpInput.required = false;
+        verifyEmailOtpButton.hidden = false;
+
+        showEmailOtpMessage("");
+
+        // Keep only the first event card
+        const allEventCards = [
+            ...eventList.querySelectorAll(".event-card")
+        ];
+
+        allEventCards.slice(1).forEach(card => card.remove());
+
+        // Sync guardian details after form reset
+        syncGuardianDetails();
+
+        // Return to Home page
+        document.getElementById("closeBooking").click();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
 
     } catch (error) {
         console.error("Booking submission failed:", error);

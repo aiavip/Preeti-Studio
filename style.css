@@ -1530,3 +1530,198 @@ footer > div > p {
         padding: 30px 22px;
     }
 }
+
+
+
+/* =========================================
+   EMAIL OTP VERIFICATION
+========================================= */
+
+#bookingForm #bookingEmail {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Email verified: keep the field readable */
+#bookingForm #bookingEmail[readonly] {
+    border-color: #3d8b62;
+    background: #f2faf5;
+    color: #245b3d;
+    cursor: default;
+}
+
+/* Send OTP and Verify Email buttons */
+#bookingForm .otp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    min-height: 42px;
+    margin-top: 5px;
+    padding: 10px 18px;
+    border: 1px solid #bd8a28;
+    border-radius: 8px;
+    background: #171717;
+    color: #e8b957;
+    font: 700 13px "DM Sans", sans-serif;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease,
+                border-color .2s ease, opacity .2s ease;
+}
+
+#bookingForm .otp-button:hover:not(:disabled) {
+    background: #e8b957;
+    color: #171717;
+    border-color: #e8b957;
+}
+
+#bookingForm .otp-button:focus-visible {
+    outline: 2px solid #bd8a28;
+    outline-offset: 3px;
+}
+
+#bookingForm .otp-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+/* OTP input section */
+#emailOtpSection {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 15px;
+    border: 1px solid #ead8a9;
+    border-radius: 10px;
+    background: #fffdf7;
+}
+
+#emailOtpSection[hidden],
+#bookingForm .otp-button[hidden] {
+    display: none !important;
+}
+
+#emailOtpSection label {
+    color: #29251b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#bookingForm #emailOtp {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid #d8d0bd;
+    border-radius: 8px;
+    background: #fff;
+    color: #171717;
+    font: 600 18px "DM Sans", sans-serif;
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+#bookingForm #emailOtp:focus {
+    border-color: #bd8a28;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(189, 138, 40, .13);
+}
+
+#bookingForm #emailOtp:disabled {
+    background: #f1f7f2;
+    border-color: #9ac8a8;
+    color: #245b3d;
+    opacity: 1;
+}
+
+/* OTP success and error messages */
+#emailOtpMessage {
+    display: block;
+    margin: 8px 0 0;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#emailOtpMessage:empty {
+    display: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    #bookingForm .otp-button {
+        width: 100%;
+        align-self: stretch;
+        min-height: 44px;
+    }
+
+    #emailOtpSection {
+        padding: 12px;
+    }
+
+    #bookingForm #emailOtp {
+        min-height: 48px;
+        font-size: 18px;
+    }
+}
+
+
+
+/* Gmail input and Send OTP on the same line */
+#bookingForm .email-otp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+#bookingForm .email-otp-row #bookingEmail {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Simple text-style OTP buttons */
+#bookingForm .otp-button {
+    flex-shrink: 0;
+    margin-top: 0;
+    padding: 8px 5px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #bd8a28;
+    font: 600 13px "DM Sans", sans-serif;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* #bookingForm .otp-button:hover:not(:disabled) {
+    color: #8b641c;
+    text-decoration: underline;
+} */
+
+#bookingForm .otp-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Keep hidden buttons hidden */
+#bookingForm .otp-button[hidden] {
+    display: none !important;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    #bookingForm .email-otp-row {
+        gap: 4px;
+    }
+
+    #bookingForm .email-otp-row .otp-button {
+        width: auto;
+        min-height: auto;
+        align-self: auto;
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+}
