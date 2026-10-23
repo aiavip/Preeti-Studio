@@ -299,6 +299,7 @@ input {
   padding: 0 50px 0 15px;
   cursor: pointer;
 }
+
 .calendar-icon {
   position: absolute;
   right: 15px;
@@ -374,14 +375,15 @@ input {
     height: 46px;
     padding: 0 16px;
   }
+
   .mobile-date-hint {
-  display: block;
-  color: #777;
-  font-size: 14px;
-  pointer-events: none;
-  position: absolute;
-  left: 15px;
-}
+    display: block;
+    color: #777;
+    font-size: 14px;
+    pointer-events: none;
+    position: absolute;
+    left: 15px;
+  }
 
 }
 
@@ -488,13 +490,16 @@ input {
   .booking-info {
     grid-template-columns: 1fr;
   }
+
   .dashboard-top {
-  padding-top: 20px;
+    padding-top: 20px;
+  }
 }
-}
+
 .mobile-date-hint {
   display: none;
 }
+
 /* =========================
    INDIVIDUAL DELETE BUTTON
    ========================= */
@@ -557,6 +562,7 @@ input {
   cursor: not-allowed;
   transform: none;
 }
+
 /* =========================
    STICKY DASHBOARD TOP
    ========================= */
@@ -581,6 +587,7 @@ input {
 .dashboard-top .stats {
   margin-bottom: 20px;
 }
+
 /* =========================
    STICKY DASHBOARD TOP
    ========================= */
@@ -704,8 +711,8 @@ input {
     cursor: pointer;
 
     transition: background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
+      border-color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .dashboard-top .delete-mode-btn:hover {
@@ -1572,80 +1579,106 @@ input {
 .add-event-inline-btn:hover {
   background: var(--gold);
   color: #111;
-} 
+}
 
 
 /* Customer Signature */
 .booking-signature {
-    margin-top: 18px;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #151515;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #151515;
 }
 
 .booking-signature img {
-    display: block;
-    max-width: 100%;
-    width: min(100%, 420px);
-    max-height: 180px;
-    object-fit: contain;
-    object-position: left center;
-    margin-top: 10px;
-    padding: 8px;
-    border-radius: 6px;
-    background: #fff;
+  display: block;
+  max-width: 100%;
+  width: min(100%, 420px);
+  max-height: 180px;
+  object-fit: contain;
+  object-position: left center;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
 }
 
 .signature-missing {
-    color: var(--text-light);
-    font-size: 13px;
+  color: var(--text-light);
+  font-size: 13px;
 }
 
 
 /* Admin Add Booking Signature */
 .admin-signature-box {
-    margin-top: 8px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #151515;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #151515;
 }
 
+
 .signature-toolbar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .signature-toolbar button,
-.signature-upload-label {
-    padding: 7px 12px;
-    border: 1px solid var(--gold);
-    border-radius: 6px;
-    background: transparent;
-    color: var(--gold);
-    font: inherit;
-    font-size: 13px;
-    cursor: pointer;
+.signature-toolbar .signature-upload-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 7px 12px;
+  margin: 0;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gold);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  text-align: center;
 }
 
+.signature-toolbar .signature-upload-label {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.signature-toolbar .signature-upload-label input[type="file"] {
+  display: none;
+}
+
+.signature-toolbar button:hover,
+.signature-toolbar .signature-upload-label:hover {
+  background: rgba(232, 185, 87, 0.12);
+}
+
+
 #adminSignatureCanvas {
-    display: block;
-    width: 100%;
-    height: 150px;
-    border-radius: 6px;
-    background: #fff;
-    touch-action: none;
-    cursor: crosshair;
+  display: block;
+  width: 100%;
+  height: 150px;
+  border-radius: 6px;
+  background: #fff;
+  touch-action: none;
+  cursor: crosshair;
 }
 
 #signatureStatus {
-    margin-top: 8px;
-    color: var(--text-light);
-    font-size: 12px;
+  margin-top: 8px;
+  color: var(--text-light);
+  font-size: 12px;
 }
 
 /* .signature-consent {
@@ -1664,32 +1697,33 @@ input {
 
 /* Fix: Admin booking signature consent checkbox */
 .signature-consent {
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    gap: 10px;
-    width: 100%;
-    margin: 12px 0;
-    font-size: 13px;
-    line-height: 1.6;
-    text-align: left;
-    cursor: pointer;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 10px;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+  cursor: pointer;
 }
 
 .signature-consent input[type="checkbox"] {
-    appearance: auto !important;
-    -webkit-appearance: checkbox !important;
-    display: inline-block !important;
-    width: 16px !important;
-    min-width: 16px !important;
-    max-width: 16px !important;
-    height: 16px !important;
-    min-height: 16px !important;
-    margin: 2px 0 0 !important;
-    padding: 0 !important;
-    flex: 0 0 16px !important;
-    cursor: pointer;
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+  display: inline-block !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  margin: 2px 0 0 !important;
+  padding: 0 !important;
+  flex: 0 0 16px !important;
+  cursor: pointer;
 }
+
 /* date 22-10-2026 ka changes */
 
 /* Select All Bookings Button */
@@ -1840,4 +1874,389 @@ input {
 /* Respect the hidden attribute */
 .booking-extra-details[hidden] {
   display: none !important;
+}
+
+
+
+/* Booking selection mode */
+.bookings-container.selection-mode .booking-card {
+  position: relative;
+  width: calc(100% - 32px);
+  margin-left: 32px;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.bookings-container.selection-mode .booking-select {
+  position: absolute;
+  left: -32px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.bookings-container.selection-mode .booking-checkbox {
+  width: 19px;
+  height: 19px;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.booking-card.booking-card-selected {
+  background: #211b10;
+  border: 1px solid #e8b957;
+  box-shadow: 0 0 0 1px rgba(232, 185, 87, 0.15);
+}
+
+@media (max-width: 700px) {
+  .bookings-container.selection-mode .booking-card {
+    width: calc(100% - 32px);
+    margin-left: 32px;
+  }
+
+  .bookings-container.selection-mode .booking-select {
+    left: -32px;
+  }
+}
+
+
+/* Admin booking email and OTP layout */
+#adminEmailOtpSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.email-otp-input-group {
+  min-width: 0;
+}
+
+.email-otp-input-group>label {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.email-otp-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+.email-otp-row input {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.email-otp-row button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  align-self: stretch;
+  margin: 0;
+}
+
+#adminEmailOtpStatus {
+  grid-column: 1 / -1;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .email-otp-row {
+    gap: 6px;
+  }
+
+  .email-otp-row button {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+}
+
+
+/* Fix: Services checkbox stays left of its text */
+.service-options .service-option {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.service-options .service-option input[type="checkbox"] {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  display: block !important;
+  position: static !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-self: center !important;
+  transform: none !important;
+  accent-color: var(--gold);
+}
+
+.service-options .service-option span {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fix service checkbox alignment on desktop and mobile */
+.new-event-card .service-options {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px 16px !important;
+  width: 100%;
+}
+
+.new-event-card .service-options label.service-option {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: 100%;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  cursor: pointer;
+}
+
+.new-event-card .service-options label.service-option input[type="checkbox"] {
+  display: inline-block !important;
+  position: static !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  accent-color: var(--gold);
+}
+
+.new-event-card .service-options label.service-option span {
+  display: inline-block !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+@media (max-width: 700px) {
+  .new-event-card .service-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+}
+
+
+/* start 23 */
+
+
+/* Event date and time: compact two-column layout */
+.new-event-card .add-form-grid>.add-form-field.event-inline-field {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.new-event-card .add-form-grid>.add-form-field.event-inline-field>label {
+  margin: 0;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.new-event-card .add-form-grid>.add-form-field.event-inline-field>input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Keep date/time fields in two columns on mobile too */
+
+@media (max-width: 700px) {
+  .new-event-card .add-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px 10px;
+  }
+
+  /* Mobile: label above input */
+  .new-event-card .add-form-grid>.add-form-field.event-inline-field {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .new-event-card .add-form-grid>.add-form-field.event-inline-field>label {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .new-event-card .add-form-grid>.add-form-field.event-inline-field>input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 12px;
+  }
+}
+
+
+/* ================================
+   COMPACT EXPANDED BOOKING DETAILS
+================================ */
+
+/* Booking details: compact grid */
+.booking-extra-details .booking-info {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+
+.booking-extra-details .booking-info > div {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.booking-extra-details .booking-info > div > span {
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Request ID and Copy ID */
+.booking-extra-details .booking-info code {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+/* Customer signature: smaller display */
+.booking-extra-details .booking-signature {
+  margin-top: 12px;
+  padding: 10px;
+}
+
+.booking-extra-details .booking-signature img {
+  width: min(100%, 300px);
+  max-height: 100px;
+  margin-top: 7px;
+  padding: 6px;
+}
+
+/* Event schedule: compact cards */
+.booking-extra-details .events-heading {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.booking-extra-details .events-list {
+  gap: 8px;
+}
+
+.booking-extra-details .event-detail {
+  gap: 8px 14px;
+  padding: 11px;
+  border-radius: 8px;
+}
+
+.booking-extra-details .event-detail h4 {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.booking-extra-details .event-detail div {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.booking-extra-details .event-detail span {
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+}
+
+/* Delete button: reduce extra spacing */
+.booking-extra-details .delete-booking-btn {
+  margin-top: 10px;
+}
+
+/* Tablet and mobile */
+@media (max-width: 700px) {
+  .booking-extra-details .booking-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+  }
+
+  .booking-extra-details .event-detail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 12px;
+    padding: 10px;
+  }
+
+  .booking-extra-details .event-detail h4 {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 360px) {
+  .booking-extra-details .booking-info {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .booking-extra-details .event-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .booking-extra-details .event-detail h4 {
+    grid-column: auto;
+  }
 }

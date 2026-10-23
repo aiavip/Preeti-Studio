@@ -93,7 +93,7 @@
         </div>
 
 
-        
+
         <!-- Bookings Controls -->
         <div class="bookings-controls">
 
@@ -111,24 +111,13 @@
           </div>
 
           <div class="booking-tools">
-            <input
-              type="search"
-              id="bookingSearch"
-              class="booking-search"
-              placeholder="Search by name, phone or location..."
-              autocomplete="off"
-            >
+            <input type="search" id="bookingSearch" class="booking-search"
+              placeholder="Search by name, phone or location..." autocomplete="off">
           </div>
 
           <div class="booking-filters">
             <div class="date-filter-wrapper">
-              <input
-                type="text"
-                id="bookingDateDisplay"
-                class="booking-date-display"
-                placeholder="DD/MM/YYYY"
-                readonly
-              >
+              <input type="text" id="bookingDateDisplay" class="booking-date-display" placeholder="DD/MM/YYYY" readonly>
 
               <span class="calendar-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -139,11 +128,7 @@
                 </svg>
               </span>
 
-              <input
-                type="date"
-                id="bookingDateFilter"
-                class="booking-date-filter"
-              >
+              <input type="date" id="bookingDateFilter" class="booking-date-filter">
             </div>
 
             <button type="button" id="clearFiltersBtn" class="clear-filters-btn">
@@ -153,37 +138,28 @@
 
         </div>
         <!-- End bookings-controls -->
-         <!-- Booking Selection Actions -->
-      <div id="bookingSelectionActions" class="booking-selection-actions" hidden>
+        <!-- Booking Selection Actions -->
+        <div id="bookingSelectionActions" class="booking-selection-actions" hidden>
 
-        <button
-          type="button"
-          id="cancelSelectionBtn"
-          class="cancel-selection-btn"
-          aria-label="Cancel selection"
-          title="Cancel selection"
-        >
-          &times;
-        </button>
+          <button type="button" id="cancelSelectionBtn" class="cancel-selection-btn" aria-label="Cancel selection"
+            title="Cancel selection">
+            &times;
+          </button>
 
-        <button
-          type="button"
-          id="selectAllBookingsBtn"
-          class="select-all-btn"
-        >
-          Select All
-        </button>
+          <button type="button" id="selectAllBookingsBtn" class="select-all-btn">
+            Select All
+          </button>
 
-        <span id="selectedBookingsCount" class="selected-bookings-count">
-          0 selected
-        </span>
+          <span id="selectedBookingsCount" class="selected-bookings-count">
+            0 selected
+          </span>
 
-      </div>
+        </div>
 
       </div>
       <!-- End dashboard-top -->
 
-      
+
 
       <!-- Booking List -->
 
@@ -228,28 +204,35 @@
                 <input id="addPersonPhone" name="personPhone" type="tel" required maxlength="20">
               </div>
 
-              <div class="add-form-field">
+              <!-- <div class="add-form-field">
                 <label for="addPersonEmail">Email *</label>
                 <input id="addPersonEmail" name="personEmail" type="email" required>
-              </div>
+              </div> -->
+
 
               <div class="add-form-field full-width" id="adminEmailOtpSection">
-                <button type="button" id="adminSendOtpBtn" class="add-event-btn">
-                  Send Email OTP
-                </button>
 
-                <label for="adminEmailOtp">Email Verification OTP *</label>
-                <div class="email-otp-row">
-                  <input id="adminEmailOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
-                    placeholder="Enter 6-digit OTP">
+                <div class="email-otp-input-group">
+                  <label for="addPersonEmail">Email *</label>
+                  <div class="email-otp-row">
+                    <input id="addPersonEmail" name="personEmail" type="email" required>
+                    <button type="button" id="adminSendOtpBtn" class="add-event-btn">Send OTP</button>
+                  </div>
+                </div>
 
-                  <button type="button" id="adminVerifyOtpBtn" class="add-event-btn">
-                    Verify OTP
-                  </button>
+                <div class="email-otp-input-group">
+                  <label for="adminEmailOtp">Email Verification OTP *</label>
+                  <div class="email-otp-row">
+                    <input id="adminEmailOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+                      placeholder="Enter 6-digit OTP">
+                    <button type="button" id="adminVerifyOtpBtn" class="add-event-btn">Verify OTP</button>
+                  </div>
                 </div>
 
                 <p id="adminEmailOtpStatus" role="status" aria-live="polite"></p>
+
               </div>
+
 
 
               <div class="add-form-field">

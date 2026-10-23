@@ -204,6 +204,8 @@ async function loadBookings() {
 
 
 function displayBookings(bookings) {
+  bookingsContainer.classList.toggle("selection-mode", deleteMode);
+
   if (!bookings || bookings.length === 0) {
     bookingsContainer.innerHTML =
       `<p class="empty-message">No bookings found.</p>`;
@@ -221,18 +223,17 @@ function displayBookings(bookings) {
       : "N/A";
 
     const checkboxHTML = deleteMode
-      ? `
-        <label class="booking-select">
-          <input
-            type="checkbox"
-            class="booking-checkbox"
-            data-id="${escapeHTML(booking._id || "")}"
-            ${selectedBookings.has(booking._id) ? "checked" : ""}
-          >
-          <span>Select</span>
-        </label>
-      `
-      : "";
+  ? `
+    <label class="booking-select" aria-label="Select booking">
+      <input
+        type="checkbox"
+        class="booking-checkbox"
+        data-id="${escapeHTML(booking._id || "")}"
+        ${selectedBookings.has(booking._id) ? "checked" : ""}
+      >
+    </label>
+  `
+  : "";
 
     const events = Array.isArray(booking.events)
       ? booking.events
@@ -459,27 +460,56 @@ function displayBookings(bookings) {
     }
 
 
-    const checkbox = bookingCard.querySelector(".booking-checkbox");
+   
+const checkbox = bookingCard.querySelector(".booking-checkbox");
 
-    if (checkbox) {
-      checkbox.addEventListener("change", () => {
-        if (checkbox.checked) {
-          selectedBookings.add(booking._id);
-        } else {
-          selectedBookings.delete(booking._id);
-        }
+if (checkbox) {
+  bookingCard.classList.toggle(
+    "booking-card-selected",
+    selectedBookings.has(booking._id)
+  );
 
-        if (selectedBookings.size === 0) {
-          deleteMode = false;
-          selectedBookings.clear();
-          displayBookings(getFilteredBookings());
-          updateDeleteButton();
-          return;
-        }
-
-        updateDeleteButton();
-      });
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      selectedBookings.add(booking._id);
+    } else {
+      selectedBookings.delete(booking._id);
     }
+
+    bookingCard.classList.toggle(
+      "booking-card-selected",
+      checkbox.checked
+    );
+
+    updateDeleteButton();
+  });
+}
+
+
+// let longPressTimer;
+// let longPressTriggered = false;
+
+function isInteractiveTarget(target) {
+  return Boolean(
+    target.closest("button, input, label, a, select, textarea")
+  );
+}
+
+function toggleThisBookingSelection() {
+  if (!deleteMode || !checkbox) return;
+
+  checkbox.checked = !checkbox.checked;
+  checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
+// Desktop aur mobile: single click/tap se select/deselect.
+bookingCard.addEventListener("click", (event) => {
+  if (!deleteMode) return;
+  if (isInteractiveTarget(event.target)) return;
+
+  toggleThisBookingSelection();
+});
+
 
     const deleteBtn = bookingCard.querySelector(".delete-booking-btn");
 
@@ -1477,25 +1507,27 @@ function addEventCard() {
           placeholder="Only for Other" maxlength="80" disabled>
       </div>
 
-      <div class="add-form-field">
-        <label>Event Date *</label>
-        <input type="date" class="new-event-date" required>
-      </div>
+     
+<div class="add-form-field event-inline-field">
+  <label>Event Date *</label>
+  <input type="date" class="new-event-date" required>
+</div>
 
-      <div class="add-form-field">
-        <label>Start Time </label>
-        <input type="time" class="new-event-start-time">
-      </div>
+<div class="add-form-field event-inline-field">
+  <label>Start Time</label>
+  <input type="time" class="new-event-start-time">
+</div>
 
-      <div class="add-form-field">
-        <label>End Date </label>
-        <input type="date" class="new-event-end-date">
-      </div>
+<div class="add-form-field event-inline-field">
+  <label>End Date</label>
+  <input type="date" class="new-event-end-date">
+</div>
 
-      <div class="add-form-field">
-        <label>End Time </label>
-        <input type="time" class="new-event-end-time">
-      </div>
+<div class="add-form-field event-inline-field">
+  <label>End Time</label>
+  <input type="time" class="new-event-end-time">
+</div>
+
 
       <div class="add-form-field full-width">
         <label>Services * (Select at least one)</label>
