@@ -551,7 +551,11 @@ const emailOtpInput = document.getElementById("emailOtp");
 const verifyEmailOtpButton = document.getElementById("verifyEmailOtp");
 const emailOtpMessage = document.getElementById("emailOtpMessage");
 
-const OTP_API_URL = "http://localhost:3000";
+const OTP_API_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://preeti-studio-backend.onrender.com";
 
 function showEmailOtpMessage(message, success = false) {
     emailOtpMessage.textContent = message;
